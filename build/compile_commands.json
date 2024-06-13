@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build",
+  "command": "C:\\llvm-mos\\bin\\mos-nes-nrom-clang++.bat -IC:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/. -Os -DNDEBUG -o CMakeFiles\\test.dir\\test.cpp.obj -c C:\\Users\\sulkp\\Downloads\\FullStackNES-main\\FullStackNES-main\\test.cpp",
+  "file": "C:\\Users\\sulkp\\Downloads\\FullStackNES-main\\FullStackNES-main\\test.cpp",
+  "output": "CMakeFiles\\test.dir\\test.cpp.obj"
+},
+{
+  "directory": "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build",
+  "command": "C:\\llvm-mos\\bin\\mos-nes-nrom-clang.bat -IC:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/. -Os -DNDEBUG -o CMakeFiles\\test.dir\\chr-rom.s.obj -c C:\\Users\\sulkp\\Downloads\\FullStackNES-main\\FullStackNES-main\\chr-rom.s",
+  "file": "C:\\Users\\sulkp\\Downloads\\FullStackNES-main\\FullStackNES-main\\chr-rom.s",
+  "output": "CMakeFiles\\test.dir\\chr-rom.s.obj"
+}
+]

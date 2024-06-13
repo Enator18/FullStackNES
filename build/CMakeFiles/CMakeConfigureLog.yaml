@@ -1,0 +1,450 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:200 (message)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      The target system is: Generic -  - 
+      The host system is: Windows - 10.0.22631 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/llvm-mos/bin/mos-nes-nrom-clang.bat 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out.elf"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out.mlb"
+      
+      The C compiler identification is Clang, found in:
+        C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/3.30.0-rc2/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: C:/llvm-mos/bin/mos-nes-nrom-clang++.bat 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out.elf"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out.mlb"
+      
+      The CXX compiler identification is Clang, found in:
+        C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/3.30.0-rc2/CompilerIdCXX/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1205 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" did not match "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+      Target: mos
+      Thread model: posix
+      InstalledDir: C:\\llvm-mos\\bin
+      Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1205 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Checking whether the ASM compiler is AppleClang using "--version" did not match "(Apple (clang|LLVM) version)":
+      clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+      Target: mos
+      Thread model: posix
+      InstalledDir: C:\\llvm-mos\\bin
+      Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1192 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Checking whether the ASM compiler is Clang using "--version" matched "(clang version)":
+      clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+      Target: mos
+      Thread model: posix
+      InstalledDir: C:\\llvm-mos\\bin
+      Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-ywwkf5"
+      binary: "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-ywwkf5"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/llvm-mos/bin/clang-scan-deps.exe"
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/cmake"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-ywwkf5'
+        
+        Run Build Command(s): C:/ninja/ninja.exe -v cmTC_b5fa5
+        [1/2] C:\\llvm-mos\\bin\\mos-nes-nrom-clang.bat   -Os -DNDEBUG   -v -MD -MT CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -MF CMakeFiles\\cmTC_b5fa5.dir\\CMakeCCompilerABI.c.obj.d -o CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -c "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCCompilerABI.c"
+        clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+        Target: mos
+        Thread model: posix
+        InstalledDir: C:\\llvm-mos\\bin
+        Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+         (in-process)
+         "C:\\\\llvm-mos\\\\bin\\\\mos-clang.exe" -cc1 -triple mos -emit-llvm-bc -flto=full -flto-unit -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model static -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -nostdsysteminc -fexperimental-assignment-tracking=disabled -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-ywwkf5" -v -ffunction-sections -fdata-sections "-fcoverage-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-ywwkf5" -resource-dir "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19" -dependency-file "CMakeFiles\\\\cmTC_b5fa5.dir\\\\CMakeCCompilerABI.c.obj.d" -MT CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -sys-header-deps -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/common/include" -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/asminc" -D __NES_NROM__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/asminc" -D __NES__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/common/asminc" -D NDEBUG -internal-isystem "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19\\\\include" -Os -ferror-limit 19 -fshort-enums -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -vectorize-loops -vectorize-slp -faddrsig -o CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -x c "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCCompilerABI.c"
+        clang -cc1 version 19.0.0git based upon LLVM 19.0.0git default target mos-unknown-unknown
+        ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/asminc"
+        ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/include"
+        ignoring duplicate directory "C:\\llvm-mos\\lib\\clang\\19\\include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         C:\\llvm-mos\\bin/../mos-platform/nes/asminc
+         C:\\llvm-mos\\bin/../mos-platform/common/asminc\x0d
+         C:\\llvm-mos\\bin/../mos-platform/nes/include\x0d
+         C:\\llvm-mos\\bin/../mos-platform/common/include\x0d
+         C:\\llvm-mos\\lib\\clang\\19\\include\x0d
+        End of search list.\x0d
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\llvm-mos\\bin\\mos-nes-nrom-clang.bat -Os -DNDEBUG -v CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -o cmTC_b5fa5   && cd ."
+        clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+        Target: mos
+        Thread model: posix
+        InstalledDir: C:\\llvm-mos\\bin
+        Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+         "C:\\\\llvm-mos\\\\bin\\\\ld.lld" --gc-sections --sort-section=alignment CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -plugin-opt=O2 -plugin-opt=-function-sections=1 -plugin-opt=-data-sections=1 -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -mllvm -zp-avail=224 "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/common/lib" -l:crt0.o -lcrt0 -lcrt -lc -Tlink.ld -o cmTC_b5fa5\x0d
+         "C:\\\\llvm-mos\\\\bin\\\\llvm-mlb" cmTC_b5fa5.elf\x0d
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [C:/llvm-mos/bin/../mos-platform/nes/asminc]
+          add: [C:/llvm-mos/bin/../mos-platform/common/asminc]
+          add: [C:/llvm-mos/bin/../mos-platform/nes/include]
+          add: [C:/llvm-mos/bin/../mos-platform/common/include]
+          add: [C:/llvm-mos/lib/clang/19/include]
+        end of search list found
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/nes/asminc] ==> [C:/llvm-mos/mos-platform/nes/asminc]
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/common/asminc] ==> [C:/llvm-mos/mos-platform/common/asminc]
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/nes/include] ==> [C:/llvm-mos/mos-platform/nes/include]
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/common/include] ==> [C:/llvm-mos/mos-platform/common/include]
+        collapse include dir [C:/llvm-mos/lib/clang/19/include] ==> [C:/llvm-mos/lib/clang/19/include]
+        implicit include dirs: [C:/llvm-mos/mos-platform/nes/asminc;C:/llvm-mos/mos-platform/common/asminc;C:/llvm-mos/mos-platform/nes/include;C:/llvm-mos/mos-platform/common/include;C:/llvm-mos/lib/clang/19/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: 'C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-ywwkf5']
+        ignore line: []
+        ignore line: [Run Build Command(s): C:/ninja/ninja.exe -v cmTC_b5fa5]
+        ignore line: [[1/2] C:\\llvm-mos\\bin\\mos-nes-nrom-clang.bat   -Os -DNDEBUG   -v -MD -MT CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -MF CMakeFiles\\cmTC_b5fa5.dir\\CMakeCCompilerABI.c.obj.d -o CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -c "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCCompilerABI.c"]
+        ignore line: [clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)]
+        ignore line: [Target: mos]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: C:\\llvm-mos\\bin]
+        ignore line: [Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg]
+        ignore line: [ (in-process)]
+        ignore line: [ "C:\\\\llvm-mos\\\\bin\\\\mos-clang.exe" -cc1 -triple mos -emit-llvm-bc -flto=full -flto-unit -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model static -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -nostdsysteminc -fexperimental-assignment-tracking=disabled -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-ywwkf5" -v -ffunction-sections -fdata-sections "-fcoverage-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-ywwkf5" -resource-dir "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19" -dependency-file "CMakeFiles\\\\cmTC_b5fa5.dir\\\\CMakeCCompilerABI.c.obj.d" -MT CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -sys-header-deps -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/common/include" -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/asminc" -D __NES_NROM__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/asminc" -D __NES__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/common/asminc" -D NDEBUG -internal-isystem "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19\\\\include" -Os -ferror-limit 19 -fshort-enums -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -vectorize-loops -vectorize-slp -faddrsig -o CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -x c "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCCompilerABI.c"]
+        ignore line: [clang -cc1 version 19.0.0git based upon LLVM 19.0.0git default target mos-unknown-unknown]
+        ignore line: [ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/asminc"]
+        ignore line: [ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/include"]
+        ignore line: [ignoring duplicate directory "C:\\llvm-mos\\lib\\clang\\19\\include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/nes/asminc]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/common/asminc\x0d]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/nes/include\x0d]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/common/include\x0d]
+        ignore line: [ C:\\llvm-mos\\lib\\clang\\19\\include\x0d]
+        ignore line: [End of search list.\x0d]
+        ignore line: [[2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\llvm-mos\\bin\\mos-nes-nrom-clang.bat -Os -DNDEBUG -v CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -o cmTC_b5fa5   && cd ."]
+        ignore line: [clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)]
+        ignore line: [Target: mos]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: C:\\llvm-mos\\bin]
+        ignore line: [Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg]
+        link line: [ "C:\\\\llvm-mos\\\\bin\\\\ld.lld" --gc-sections --sort-section=alignment CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj -plugin-opt=O2 -plugin-opt=-function-sections=1 -plugin-opt=-data-sections=1 -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -mllvm -zp-avail=224 "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/common/lib" -l:crt0.o -lcrt0 -lcrt -lc -Tlink.ld -o cmTC_b5fa5\x0d]
+          arg [C:\\\\llvm-mos\\\\bin\\\\ld.lld] ==> ignore
+          arg [--gc-sections] ==> ignore
+          arg [--sort-section=alignment] ==> ignore
+          arg [CMakeFiles/cmTC_b5fa5.dir/CMakeCCompilerABI.c.obj] ==> ignore
+          arg [-plugin-opt=O2] ==> ignore
+          arg [-plugin-opt=-function-sections=1] ==> ignore
+          arg [-plugin-opt=-data-sections=1] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-force-precise-rotation-cost] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-jump-inst-cost=6] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-force-loop-cold-block] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-phi-node-folding-threshold=0] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-speculate-blocks=0] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-align-large-globals=false] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-disable-spill-hoist] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-lsr-complexity-limit=10000000] ==> lib [sr-complexity-limit=10000000]
+          arg [-mllvm] ==> ignore
+          arg [-zp-avail=224] ==> ignore
+          arg [-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib] ==> dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib]
+          arg [-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib] ==> dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib]
+          arg [-LC:\\\\llvm-mos\\\\bin/../mos-platform/common/lib] ==> dir [C:\\\\llvm-mos\\\\bin/../mos-platform/common/lib]
+          arg [-l:crt0.o] ==> lib [-l:crt0.o]
+          arg [-lcrt0] ==> lib [crt0]
+          arg [-lcrt] ==> lib [crt]
+          arg [-lc] ==> lib [c]
+          arg [-Tlink.ld] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_b5fa5] ==> ignore
+        linker tool for 'C': C:/llvm-mos/bin/ld.lld
+        collapse library dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib] ==> [C:/llvm-mos/mos-platform/nes-nrom/lib]
+        collapse library dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib] ==> [C:/llvm-mos/mos-platform/nes/lib]
+        collapse library dir [C:\\\\llvm-mos\\\\bin/../mos-platform/common/lib] ==> [C:/llvm-mos/mos-platform/common/lib]
+        implicit libs: [sr-complexity-limit=10000000;-l:crt0.o;crt0;crt;c]
+        implicit objs: []
+        implicit dirs: [C:/llvm-mos/mos-platform/nes-nrom/lib;C:/llvm-mos/mos-platform/nes/lib;C:/llvm-mos/mos-platform/common/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Running the C compiler's linker: "C:/llvm-mos/bin/ld.lld" "-v"
+      LLD 19.0.0 (compatible with GNU linkers)
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-sj5dt0"
+      binary: "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-sj5dt0"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/llvm-mos/bin/clang-scan-deps.exe"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/cmake"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-sj5dt0'
+        
+        Run Build Command(s): C:/ninja/ninja.exe -v cmTC_e9f8d
+        [1/2] C:\\llvm-mos\\bin\\mos-nes-nrom-clang++.bat   -Os -DNDEBUG   -v -MD -MT CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -MF CMakeFiles\\cmTC_e9f8d.dir\\CMakeCXXCompilerABI.cpp.obj.d -o CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -c "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp"
+        clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+        Target: mos
+        Thread model: posix
+        InstalledDir: C:\\llvm-mos\\bin
+        Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+         (in-process)
+         "C:\\\\llvm-mos\\\\bin\\\\mos-clang++.exe" -cc1 -triple mos -emit-llvm-bc -flto=full -flto-unit -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model static -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -nostdsysteminc -fexperimental-assignment-tracking=disabled -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-sj5dt0" -v -ffunction-sections -fdata-sections "-fcoverage-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-sj5dt0" -resource-dir "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19" -dependency-file "CMakeFiles\\\\cmTC_e9f8d.dir\\\\CMakeCXXCompilerABI.cpp.obj.d" -MT CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -sys-header-deps -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/common/include" -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/asminc" -D __NES_NROM__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/asminc" -D __NES__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/common/asminc" -D NDEBUG -internal-isystem "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19\\\\include" -Os -fdeprecated-macro -ferror-limit 19 -fshort-enums -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -vectorize-loops -vectorize-slp -faddrsig -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -x c++ "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp"
+        clang -cc1 version 19.0.0git based upon LLVM 19.0.0git default target mos-unknown-unknown
+        ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/asminc"
+        ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/include"
+        ignoring duplicate directory "C:\\llvm-mos\\lib\\clang\\19\\include"
+        #include "..." search starts here:\x0d
+        #include <...> search starts here:\x0d
+         C:\\llvm-mos\\bin/../mos-platform/nes/asminc\x0d
+         C:\\llvm-mos\\bin/../mos-platform/common/asminc\x0d
+         C:\\llvm-mos\\bin/../mos-platform/nes/include\x0d
+         C:\\llvm-mos\\bin/../mos-platform/common/include\x0d
+         C:\\llvm-mos\\lib\\clang\\19\\include\x0d
+        End of search list.\x0d
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\llvm-mos\\bin\\mos-nes-nrom-clang++.bat -Os -DNDEBUG -v CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_e9f8d   && cd ."
+        clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)
+        Target: mos
+        Thread model: posix
+        InstalledDir: C:\\llvm-mos\\bin
+        Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg
+         "C:\\\\llvm-mos\\\\bin\\\\ld.lld" --gc-sections --sort-section=alignment CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -plugin-opt=O2 -plugin-opt=-function-sections=1 -plugin-opt=-data-sections=1 -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -mllvm -zp-avail=224 "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/common/lib" -l:crt0.o -lcrt0 -lcrt -lc -Tlink.ld -o cmTC_e9f8d\x0d
+         "C:\\\\llvm-mos\\\\bin\\\\llvm-mlb" cmTC_e9f8d.elf\x0d
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [C:/llvm-mos/bin/../mos-platform/nes/asminc]
+          add: [C:/llvm-mos/bin/../mos-platform/common/asminc]
+          add: [C:/llvm-mos/bin/../mos-platform/nes/include]
+          add: [C:/llvm-mos/bin/../mos-platform/common/include]
+          add: [C:/llvm-mos/lib/clang/19/include]
+        end of search list found
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/nes/asminc] ==> [C:/llvm-mos/mos-platform/nes/asminc]
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/common/asminc] ==> [C:/llvm-mos/mos-platform/common/asminc]
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/nes/include] ==> [C:/llvm-mos/mos-platform/nes/include]
+        collapse include dir [C:/llvm-mos/bin/../mos-platform/common/include] ==> [C:/llvm-mos/mos-platform/common/include]
+        collapse include dir [C:/llvm-mos/lib/clang/19/include] ==> [C:/llvm-mos/lib/clang/19/include]
+        implicit include dirs: [C:/llvm-mos/mos-platform/nes/asminc;C:/llvm-mos/mos-platform/common/asminc;C:/llvm-mos/mos-platform/nes/include;C:/llvm-mos/mos-platform/common/include;C:/llvm-mos/lib/clang/19/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: 'C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/CMakeScratch/TryCompile-sj5dt0']
+        ignore line: []
+        ignore line: [Run Build Command(s): C:/ninja/ninja.exe -v cmTC_e9f8d]
+        ignore line: [[1/2] C:\\llvm-mos\\bin\\mos-nes-nrom-clang++.bat   -Os -DNDEBUG   -v -MD -MT CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -MF CMakeFiles\\cmTC_e9f8d.dir\\CMakeCXXCompilerABI.cpp.obj.d -o CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -c "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp"]
+        ignore line: [clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)]
+        ignore line: [Target: mos]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: C:\\llvm-mos\\bin]
+        ignore line: [Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg]
+        ignore line: [ (in-process)]
+        ignore line: [ "C:\\\\llvm-mos\\\\bin\\\\mos-clang++.exe" -cc1 -triple mos -emit-llvm-bc -flto=full -flto-unit -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model static -mframe-pointer=all -fmath-errno -ffp-contract=on -fno-rounding-math -mconstructor-aliases -nostdsysteminc -fexperimental-assignment-tracking=disabled -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -debugger-tuning=gdb "-fdebug-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-sj5dt0" -v -ffunction-sections -fdata-sections "-fcoverage-compilation-dir=C:\\\\Users\\\\sulkp\\\\Downloads\\\\FullStackNES-main\\\\FullStackNES-main\\\\build\\\\CMakeFiles\\\\CMakeScratch\\\\TryCompile-sj5dt0" -resource-dir "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19" -dependency-file "CMakeFiles\\\\cmTC_e9f8d.dir\\\\CMakeCXXCompilerABI.cpp.obj.d" -MT CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -sys-header-deps -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/include" -isystem "C:\\\\llvm-mos\\\\bin/../mos-platform/common/include" -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/asminc" -D __NES_NROM__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/nes/asminc" -D __NES__ -I "C:\\\\llvm-mos\\\\bin/../mos-platform/common/asminc" -D NDEBUG -internal-isystem "C:\\\\llvm-mos\\\\lib\\\\clang\\\\19\\\\include" -Os -fdeprecated-macro -ferror-limit 19 -fshort-enums -fno-signed-char -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -vectorize-loops -vectorize-slp -faddrsig -D__GCC_HAVE_DWARF2_CFI_ASM=1 -o CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -x c++ "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeCXXCompilerABI.cpp"]
+        ignore line: [clang -cc1 version 19.0.0git based upon LLVM 19.0.0git default target mos-unknown-unknown]
+        ignore line: [ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/asminc"]
+        ignore line: [ignoring nonexistent directory "C:\\llvm-mos\\bin/../mos-platform/nes-nrom/include"]
+        ignore line: [ignoring duplicate directory "C:\\llvm-mos\\lib\\clang\\19\\include"]
+        ignore line: [#include "..." search starts here:\x0d]
+        ignore line: [#include <...> search starts here:\x0d]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/nes/asminc\x0d]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/common/asminc\x0d]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/nes/include\x0d]
+        ignore line: [ C:\\llvm-mos\\bin/../mos-platform/common/include\x0d]
+        ignore line: [ C:\\llvm-mos\\lib\\clang\\19\\include\x0d]
+        ignore line: [End of search list.\x0d]
+        ignore line: [[2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\llvm-mos\\bin\\mos-nes-nrom-clang++.bat -Os -DNDEBUG -v CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_e9f8d   && cd ."]
+        ignore line: [clang version 19.0.0git (https://github.com/llvm-mos/llvm-mos 9c3a71b6966a8a116129dc89e0e38dd767d4e6c4)]
+        ignore line: [Target: mos]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: C:\\llvm-mos\\bin]
+        ignore line: [Configuration file: C:\\llvm-mos\\bin\\mos-nes-nrom.cfg]
+        link line: [ "C:\\\\llvm-mos\\\\bin\\\\ld.lld" --gc-sections --sort-section=alignment CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj -plugin-opt=O2 -plugin-opt=-function-sections=1 -plugin-opt=-data-sections=1 -mllvm -force-precise-rotation-cost -mllvm -jump-inst-cost=6 -mllvm -force-loop-cold-block -mllvm -phi-node-folding-threshold=0 -mllvm -speculate-blocks=0 -mllvm -align-large-globals=false -mllvm -disable-spill-hoist -mllvm -lsr-complexity-limit=10000000 -mllvm -zp-avail=224 "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib" "-LC:\\\\llvm-mos\\\\bin/../mos-platform/common/lib" -l:crt0.o -lcrt0 -lcrt -lc -Tlink.ld -o cmTC_e9f8d\x0d]
+          arg [C:\\\\llvm-mos\\\\bin\\\\ld.lld] ==> ignore
+          arg [--gc-sections] ==> ignore
+          arg [--sort-section=alignment] ==> ignore
+          arg [CMakeFiles/cmTC_e9f8d.dir/CMakeCXXCompilerABI.cpp.obj] ==> ignore
+          arg [-plugin-opt=O2] ==> ignore
+          arg [-plugin-opt=-function-sections=1] ==> ignore
+          arg [-plugin-opt=-data-sections=1] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-force-precise-rotation-cost] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-jump-inst-cost=6] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-force-loop-cold-block] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-phi-node-folding-threshold=0] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-speculate-blocks=0] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-align-large-globals=false] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-disable-spill-hoist] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-lsr-complexity-limit=10000000] ==> lib [sr-complexity-limit=10000000]
+          arg [-mllvm] ==> ignore
+          arg [-zp-avail=224] ==> ignore
+          arg [-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib] ==> dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib]
+          arg [-LC:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib] ==> dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib]
+          arg [-LC:\\\\llvm-mos\\\\bin/../mos-platform/common/lib] ==> dir [C:\\\\llvm-mos\\\\bin/../mos-platform/common/lib]
+          arg [-l:crt0.o] ==> lib [-l:crt0.o]
+          arg [-lcrt0] ==> lib [crt0]
+          arg [-lcrt] ==> lib [crt]
+          arg [-lc] ==> lib [c]
+          arg [-Tlink.ld] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_e9f8d] ==> ignore
+        linker tool for 'CXX': C:/llvm-mos/bin/ld.lld
+        collapse library dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes-nrom/lib] ==> [C:/llvm-mos/mos-platform/nes-nrom/lib]
+        collapse library dir [C:\\\\llvm-mos\\\\bin/../mos-platform/nes/lib] ==> [C:/llvm-mos/mos-platform/nes/lib]
+        collapse library dir [C:\\\\llvm-mos\\\\bin/../mos-platform/common/lib] ==> [C:/llvm-mos/mos-platform/common/lib]
+        implicit libs: [sr-complexity-limit=10000000;-l:crt0.o;crt0;crt;c]
+        implicit objs: []
+        implicit dirs: [C:/llvm-mos/mos-platform/nes-nrom/lib;C:/llvm-mos/mos-platform/nes/lib;C:/llvm-mos/mos-platform/common/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:6 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/llvm-mos/bin/ld.lld" "-v"
+      LLD 19.0.0 (compatible with GNU linkers)
+...

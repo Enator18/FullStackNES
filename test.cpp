@@ -14,14 +14,22 @@ MAPPER_USE_HORIZONTAL_MIRRORING;
 #define SFIXED(float_literal) (int16_t)(float_literal * 256.0)
 #define HIGH_BYTE(a) *((uint8_t*)&a+1)
 
-
+uint8_t random(){
+  uint8_t rand = rand8();
+  while(rand>251){
+    rand=rand8(); // balance my random like a sane human being
+  }
+  return rand%12;
+}
 
 typedef struct Block {
   uint8_t ypos = 0;
-  uint8_t xpos = 140;
+  uint8_t xpos = 144; // (2 + col) * 16
   uint8_t col = 7;
   bool shouldExist = true;
 } Block;
+
+void write_to_collisions(Block block);
 
 uint8_t jumped;
 
@@ -50,20 +58,20 @@ uint8_t on_ground;
 
 uint8_t c_map[240] =
 {
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
  
@@ -78,8 +86,25 @@ uint8_t columns[12] = {
   207,207,207,207,207,207,
   207,207,207,207,207,207
 };
+// uint8_t columns_old[12] = {
+//   206,206,206,206,206,206,
+//   206,206,206,206,206,206
+// };
+uint8_t col_to_change = 12;
+
+// uint8_t getIndexOfEmptyCollider(uint8_t column){
+//   for(uint8_t i = 0; i < 15; i++){
+
+//   }
+// }
 
 Block active_block;
+
+void spawnBlock(){
+  active_block = Block();
+  active_block.col = random();
+  active_block.xpos = (active_block.col + 2) << 4;
+}
 
 int main(void)
 {
@@ -93,17 +118,39 @@ int main(void)
 
   oam_size(1);
 
-  ppu_on_all();
+  vram_adr(get_at_addr(0,0,0));
+  vram_fill(0,64);
 
+  ppu_on_all();
+  spawnBlock();
+
+  // set_vram_buffer();
+  // one_vram_buffer(2, NTADR_A(4,27));
 
   while (1)
   {
+    //wait
     ppu_wait_nmi();
     
+    //move dude
     player_movement();
 
+    //move stuff
     block_movement(&active_block);
 
+    //hardware hell
+    set_vram_buffer();
+    if(col_to_change!=12){
+      uint8_t tiles[2] = {
+        2,3
+      };
+      multi_vram_buffer_vert(tiles, sizeof(tiles),
+                          NTADR_A((col_to_change << 1) + 4, (columns[col_to_change] >> 3) + 3));
+      tiles[0] = 4;
+      tiles[1] = 5;
+      multi_vram_buffer_vert(tiles, sizeof(tiles),
+                    NTADR_A((col_to_change << 1) + 5, (columns[col_to_change] >> 3) + 3));
+    }
     oam_clear();
     oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1), 0x01, 0x00);
     oam_meta_spr(active_block.xpos, active_block.ypos - 1, block_sprite);
@@ -190,16 +237,17 @@ void player_movement()
     }
 }
 
-void block_movement(Block* block)
-{
+void block_movement(Block* block){
+  col_to_change = 12;
   if(block->shouldExist){
     block->ypos+=4;
     if(block->ypos>=columns[block->col]){
-      columns[block->col] -= 16;
       block->shouldExist=false;
+      c_map[(block->col) + (columns[block->col]) + 3] = 1;
+      columns[block->col] -= 16;
+      col_to_change = block->col;
+      spawnBlock();
     }
-  }else{
-    active_block = Block();
   }
 }
 
