@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "Default Configure",
+      "displayName": "Default",
+      "description": "Default config using Ninja generator with a custom LLVM-MOS path",
+      "inherits": "default",
+      "cacheVariables": {"CMAKE_PREFIX_PATH": "C:/llvm-mos"}
+    }
+  ]
+}

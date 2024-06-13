@@ -1,0 +1,29 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+      "major": 3,
+      "minor": 21,
+      "patch": 0
+    },
+    "configurePresets": [
+      {
+        "name": "default",
+        "displayName": "Default",
+        "description": "Default config using Ninja generator",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build/",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "MinSizeRel",
+          "CMAKE_MODULE_PATH": "${sourceDir}/cmake",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+          "CMAKE_FRAMEWORK_PATH": "${sourceDir}/tools/${hostSystemName}/famistudio;${sourceDir}/scripts"
+        }
+      }
+    ],
+    "buildPresets": [
+      {
+        "name": "default",
+        "configurePreset": "default"
+      }
+    ]
+}

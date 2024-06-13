@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"clangd.arguments": [
+			"--query-driver=C:\\llvm-mos\\bin\\*clang*"
+		],
+		"clangd.path": "C:\\llvm-mos\\bin\\clangd.exe"
+	}
+}
