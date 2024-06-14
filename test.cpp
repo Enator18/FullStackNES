@@ -26,16 +26,14 @@ uint8_t pad_sum;
 uint8_t random(){
   set_rand(rand8() + pad_sum);
 
-  uint8_t rand = rand8();
-  
-  return rand%12;
+  return rand8();
 }
 
 typedef struct Block {
   uint8_t ypos = 0;
   uint8_t xpos = 144; // (2 + col) * 16
-  uint8_t col = 7;
-  bool shouldExist = true;
+  uint8_t col = 12;
+  bool shouldExist = false;
 } Block;
 
 void write_to_collisions(Block block);
@@ -99,15 +97,20 @@ uint8_t columns[12] = {
 //   206,206,206,206,206,206,
 //   206,206,206,206,206,206
 // };
-uint8_t col_to_change = 12;
+uint8_t cols_to_change[16] = {
+  12, 12, 12, 12,
+  12, 12, 12, 12,
+  12, 12, 12, 12,
+  12, 12, 12, 12,
+};
 
 // uint8_t getIndexOfEmptyCollider(uint8_t column){
 //   for(uint8_t i = 0; i < 15; i++){
 
 //   }
 // }
-
-Block active_block;
+uint8_t frames_since_last_spawn = 200;
+Block blocks[16];
 
 bool playerIntersect(uint8_t blockx, uint8_t blocky){
   // within this function, we are the block
@@ -127,11 +130,18 @@ bool playerIntersect(uint8_t blockx, uint8_t blocky){
 }
 
 void spawnBlock(){
-  active_block = Block();
+  Block new_block;
   do{
-    active_block.col = random();
-  }while(columns[active_block.col]>207);
-  active_block.xpos = (active_block.col + 2) << 4;
+    new_block.col = random()%12;
+  }while(columns[new_block.col]>207);
+  new_block.xpos = (new_block.col + 2) << 4;
+  new_block.shouldExist = true;
+  for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
+    if(!blocks[i].shouldExist){
+      blocks[i] = new_block;
+      break;
+    }
+  }
 }
 
 int main(void)
@@ -192,37 +202,61 @@ int main(void)
     ppu_wait_nmi();
   }
   seed_rng();
-  spawnBlock();
 
   while (1)
   {
+    ppu_wait_nmi();
+
+    frames_since_last_spawn++;
+    uint8_t blocks_on_screen = 0; //optimize later
+    for(Block block : blocks){
+      if(block.shouldExist){
+        blocks_on_screen++;
+      }
+    }
+    if(frames_since_last_spawn>25){
+      spawnBlock();
+      frames_since_last_spawn = 0;
+    }
     // *sq1_pitch_low = rand8();
     // *sq1_vol = (rand8() & 0b11000000) + 0b00111111;
     //wait
-    ppu_wait_nmi();
+
     
     //move dude
     player_movement();
 
     //move stuff
-    block_movement(&active_block);
+    for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: Length of blocks
+      if(blocks[i].shouldExist){
+        block_movement(&(blocks[i]));
+      }
+    }
 
     //hardware hell
     set_vram_buffer();
-    if(col_to_change!=12){
-      uint8_t tiles[2] = {
-        2,3
-      };
-      multi_vram_buffer_vert(tiles, sizeof(tiles),
-                          NTADR_A((col_to_change << 1) + 4, (columns[col_to_change] >> 3) + 3));
-      tiles[0] = 4;
-      tiles[1] = 5;
-      multi_vram_buffer_vert(tiles, sizeof(tiles),
-                    NTADR_A((col_to_change << 1) + 5, (columns[col_to_change] >> 3) + 3));
+    for(uint8_t i = 0; i < 16; i++){
+      if(cols_to_change[i]==12){
+        break;
+      }
+        uint8_t tiles[2] = {
+          2,3
+        };
+        multi_vram_buffer_vert(tiles, sizeof(tiles),
+                            NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3));
+        tiles[0] = 4;
+        tiles[1] = 5;
+        multi_vram_buffer_vert(tiles, sizeof(tiles),
+                      NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3));
+        cols_to_change[i] = 12;
     }
     oam_clear();
     oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1), 0x01, 0x00);
-    oam_meta_spr(active_block.xpos, active_block.ypos - 1, block_sprite);
+    for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
+      if(blocks[i].shouldExist){
+        oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1, block_sprite);
+      }
+    }
   }
 }
 
@@ -312,7 +346,7 @@ void player_movement()
 }
 
 void block_movement(Block* block){
-  col_to_change = 12;
+  uint8_t col_to_change = 12;
   if(block->shouldExist){
     block->ypos+=4;
     if(block->ypos>=columns[block->col]){
@@ -320,7 +354,13 @@ void block_movement(Block* block){
       c_map[(block->col) + (columns[block->col]) + 3] = 1;
       columns[block->col] -= 16;
       col_to_change = block->col;
-      spawnBlock();
+      for(uint8_t i = 0; i < 16; i++){
+        if(cols_to_change[i]==12){
+          cols_to_change[i]=col_to_change;
+          break;
+        }
+      }
+      // spawnBlock();
     }else if (playerIntersect(block->xpos, block->ypos)) {
       player_dead = true;
     }
