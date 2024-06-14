@@ -14,6 +14,12 @@ MAPPER_USE_HORIZONTAL_MIRRORING;
 #define SFIXED(float_literal) (int16_t)(float_literal * 256.0)
 #define HIGH_BYTE(a) *((uint8_t*)&a+1)
 
+volatile uint8_t* sq1_vol = (volatile uint8_t*)0x4000;
+volatile uint8_t* sq1_sweep = (volatile uint8_t*)0x4001;
+volatile uint8_t* sq1_pitch_low = (volatile uint8_t*)0x4002;
+volatile uint8_t* sq1_pitch_high = (volatile uint8_t*)0x4003;
+volatile uint8_t* apu_enable = (volatile uint8_t*)0x4015;
+
 uint8_t random(){
   uint8_t rand = rand8();
   while(rand>251){
@@ -56,6 +62,8 @@ uint8_t block_y = 0;
 
 uint8_t on_ground;
 
+uint8_t pad_sum;
+
 uint8_t c_map[240] =
 {
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -64,8 +72,8 @@ uint8_t c_map[240] =
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -161,6 +169,9 @@ void player_movement()
 {
     //Player Input
     char pad = pad_poll(0);
+
+    pad_sum += pad;
+    
     if (pad & PAD_LEFT)
     {
       x_vel -= FIXED(0.25);

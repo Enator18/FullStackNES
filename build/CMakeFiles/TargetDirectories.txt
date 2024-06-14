@@ -1,3 +1,0 @@
-C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/test.dir
-C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/edit_cache.dir
-C:/Users/sulkp/Downloads/FullStackNES-main/FullStackNES-main/build/CMakeFiles/rebuild_cache.dir
