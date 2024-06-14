@@ -21,11 +21,13 @@ volatile uint8_t* sq1_pitch_low = (volatile uint8_t*)0x4002;
 volatile uint8_t* sq1_pitch_high = (volatile uint8_t*)0x4003;
 volatile uint8_t* apu_enable = (volatile uint8_t*)0x4015;
 
+uint8_t pad_sum;
+
 uint8_t random(){
+  set_rand(rand8() + pad_sum);
+
   uint8_t rand = rand8();
-  while(rand>251){
-    rand=rand8(); // balance my random like a sane human being
-  }
+  
   return rand%12;
 }
 
@@ -62,8 +64,6 @@ uint8_t block_x = 112;
 uint8_t block_y = 0;
 
 uint8_t on_ground;
-
-uint8_t pad_sum;
 
 uint8_t c_map[240] =
 {
