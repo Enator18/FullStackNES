@@ -189,8 +189,9 @@ int main(void)
                     NTADR_A(4, 28));
   multi_vram_buffer_horz(bottom_row, sizeof(bottom_row),
                     NTADR_A(4, 29));
-  ppu_wait_nmi();
-  while(!((pad_poll(0)&PAD_START)));
+  while(!((pad_poll(0)&PAD_START))){
+    ppu_wait_nmi();
+  }
   seed_rng();
 
   while (1)
