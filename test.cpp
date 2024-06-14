@@ -111,16 +111,16 @@ Block active_block;
 
 bool playerIntersect(uint8_t blockx, uint8_t blocky){
   // within this function, we are the block
-  if(blockx + 16 < uint8_t(x_pos >> 8) ){
+  if(blockx + 15 < uint8_t(x_pos >> 8) ){
     return false; // we are too far to the right of the player
   }
-  if(blockx > uint8_t(x_pos >> 8) + 16){
+  if(blockx > uint8_t(x_pos >> 8) + 15){
     return false; // we are too far to the left of the player
   }
-  if(blocky + 16 < uint8_t(y_pos >> 8)){
+  if(blocky + 15 < uint8_t(y_pos >> 8)){
     return false;//our bottom left corner is above the player's top left corner
   }
-  if(blocky > uint8_t(y_pos >> 8) + 32){
+  if(blocky > uint8_t(y_pos >> 8) + 31){
     return false; // our top left corner is below the player's bottom left corner
   }
   return true;
