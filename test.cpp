@@ -128,7 +128,9 @@ bool playerIntersect(uint8_t blockx, uint8_t blocky){
 
 void spawnBlock(){
   active_block = Block();
-  active_block.col = random();
+  do{
+    active_block.col = random();
+  }while(columns[active_block.col]>207);
   active_block.xpos = (active_block.col + 2) << 4;
 }
 
