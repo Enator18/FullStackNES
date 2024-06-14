@@ -150,6 +150,10 @@ int main(void)
   vram_fill(0,64);
 
   ppu_on_all();
+  // *apu_enable = 1;
+  // *sq1_vol = 0x3f;
+  // *sq1_pitch_low = 0xc9;
+  // *sq1_pitch_high = 0;
   spawnBlock();
 
   const uint8_t top_row[24] = {
@@ -185,9 +189,14 @@ int main(void)
                     NTADR_A(4, 28));
   multi_vram_buffer_horz(bottom_row, sizeof(bottom_row),
                     NTADR_A(4, 29));
+  ppu_wait_nmi();
+  while(!((pad_poll(0)&PAD_START)));
+  seed_rng();
 
   while (1)
   {
+    // *sq1_pitch_low = rand8();
+    // *sq1_vol = (rand8() & 0b11000000) + 0b00111111;
     //wait
     ppu_wait_nmi();
     
