@@ -63,7 +63,7 @@ uint8_t block_y = 0;
 
 uint8_t on_ground;
 
-uint8_t c_map[240] =
+constexpr uint8_t starting_c_map[240] =
 {
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -81,6 +81,7 @@ uint8_t c_map[240] =
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
+uint8_t c_map[240];
  
 uint8_t block_sprite[9] = 
 {
@@ -144,27 +145,26 @@ void spawnBlock(){
   }
 }
 
-int main(void)
-{
-  const unsigned char palette[4]={ 0x37, 0x0f, 0x17, 0x07 };
-  static const char palette_sp[8] = { 0x0f, 0x30, 0x1c, 0x2c, 0x0f, 0x0f, 0x17, 0x07 };
 
-  //Draw Background and set PPU Settings
-  ppu_off();
-  pal_bg(palette);
-  pal_spr(palette_sp);
-
-  oam_size(1);
-
-  vram_adr(get_at_addr(0,0,0));
-  vram_fill(0,64);
-
-  ppu_on_all();
-  // *apu_enable = 1;
-  // *sq1_vol = 0x3f;
-  // *sq1_pitch_low = 0xc9;
-  // *sq1_pitch_high = 0;
-
+void reset_game(){
+  x_pos = FIXED(128);
+  y_pos = FIXED(208);
+  x_vel = 0;
+  y_vel = 0;
+  frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
+  player_dead = false;
+  for(uint8_t i = 0; i < 240; i++){
+    c_map[i] = starting_c_map[i];
+  }
+  for(uint8_t i = 0; i < 16; i++){
+    cols_to_change[i]=12;
+    blocks[i]=Block();
+  }
+  for(uint8_t i = 0; i < 12; i++){
+    columns[i] = 207;
+  }
+  //   vram_adr(NTADR_A(0,0));
+  // vram_fill(0,128);
   const uint8_t top_row[24] = {
     2,4,
     2,4,
@@ -203,7 +203,7 @@ int main(void)
   }
   seed_rng();
 
-  while (1)
+  while (!player_dead)
   {
     ppu_wait_nmi();
 
@@ -258,6 +258,45 @@ int main(void)
       }
     }
   }
+  uint8_t blank_row[24] = {
+    0,0,0,0,0,0,
+    0,0,0,0,0,0,
+    0,0,0,0,0,0,
+    0,0,0,0,0,0,
+  };
+  oam_clear();
+  for(uint8_t i = 0; i < 28; i++){
+    set_vram_buffer();
+    multi_vram_buffer_horz(blank_row, sizeof(blank_row),
+                      NTADR_A(4, i));
+    ppu_wait_nmi();
+  }
+  //Death animation here
+}
+int main(void)
+{
+  const unsigned char palette[4]={ 0x37, 0x0f, 0x17, 0x07 };
+  static const char palette_sp[8] = { 0x0f, 0x30, 0x1c, 0x2c, 0x0f, 0x0f, 0x17, 0x07 };
+
+  //Draw Background and set PPU Settings
+  ppu_off();
+  pal_bg(palette);
+  pal_spr(palette_sp);
+
+  oam_size(1);
+
+  vram_adr(get_at_addr(0,0,0));
+  vram_fill(0,64);
+
+  ppu_on_all();
+  // *apu_enable = 1;
+  // *sq1_vol = 0x3f;
+  // *sq1_pitch_low = 0xc9;
+  // *sq1_pitch_high = 0;
+  while(1){
+    reset_game();
+  }
+
 }
 
 void player_movement()
