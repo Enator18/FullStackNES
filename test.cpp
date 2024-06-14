@@ -13,6 +13,7 @@ MAPPER_USE_HORIZONTAL_MIRRORING;
 #define FIXED(float_literal) (uint16_t)(float_literal * 256.0)
 #define SFIXED(float_literal) (int16_t)(float_literal * 256.0)
 #define HIGH_BYTE(a) *((uint8_t*)&a+1)
+bool player_dead = false;
 
 uint8_t random(){
   uint8_t rand = rand8();
@@ -100,6 +101,23 @@ uint8_t col_to_change = 12;
 
 Block active_block;
 
+bool playerIntersect(uint8_t blockx, uint8_t blocky){
+  // within this function, we are the block
+  if(blockx + 16 < uint8_t(x_pos >> 8) ){
+    return false; // we are too far to the right of the player
+  }
+  if(blockx > uint8_t(x_pos >> 8) + 16){
+    return false; // we are too far to the left of the player
+  }
+  if(blocky + 16 < uint8_t(y_pos >> 8)){
+    return false;//our bottom left corner is above the player's top left corner
+  }
+  if(blocky > uint8_t(y_pos >> 8) + 32){
+    return false; // our top left corner is below the player's bottom left corner
+  }
+  return true;
+}
+
 void spawnBlock(){
   active_block = Block();
   active_block.col = random();
@@ -124,8 +142,39 @@ int main(void)
   ppu_on_all();
   spawnBlock();
 
-  // set_vram_buffer();
-  // one_vram_buffer(2, NTADR_A(4,27));
+  const uint8_t top_row[24] = {
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+    2,4,
+  };
+    const uint8_t bottom_row[24] = {
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+    3,5,
+  };
+  set_vram_buffer();
+  multi_vram_buffer_horz(top_row, sizeof(top_row),
+                    NTADR_A(4, 28));
+  multi_vram_buffer_horz(bottom_row, sizeof(bottom_row),
+                    NTADR_A(4, 29));
 
   while (1)
   {
@@ -161,6 +210,7 @@ void player_movement()
 {
     //Player Input
     char pad = pad_poll(0);
+    if(!player_dead){
     if (pad & PAD_LEFT)
     {
       x_vel -= FIXED(0.25);
@@ -195,6 +245,7 @@ void player_movement()
       {
         jumped = 0;
       }
+    }
     }
 
     //Gravity
@@ -247,6 +298,8 @@ void block_movement(Block* block){
       columns[block->col] -= 16;
       col_to_change = block->col;
       spawnBlock();
+    }else if (playerIntersect(block->xpos, block->ypos)) {
+      player_dead = true;
     }
   }
 }
