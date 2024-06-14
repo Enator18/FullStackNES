@@ -154,7 +154,6 @@ int main(void)
   // *sq1_vol = 0x3f;
   // *sq1_pitch_low = 0xc9;
   // *sq1_pitch_high = 0;
-  spawnBlock();
 
   const uint8_t top_row[24] = {
     2,4,
@@ -193,6 +192,7 @@ int main(void)
     ppu_wait_nmi();
   }
   seed_rng();
+  spawnBlock();
 
   while (1)
   {
