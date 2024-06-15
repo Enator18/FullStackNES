@@ -15,12 +15,6 @@ MAPPER_USE_HORIZONTAL_MIRRORING;
 #define HIGH_BYTE(a) *((uint8_t*)&a+1)
 bool player_dead = false;
 
-volatile uint8_t* sq1_vol = (volatile uint8_t*)0x4000;
-volatile uint8_t* sq1_sweep = (volatile uint8_t*)0x4001;
-volatile uint8_t* sq1_pitch_low = (volatile uint8_t*)0x4002;
-volatile uint8_t* sq1_pitch_high = (volatile uint8_t*)0x4003;
-volatile uint8_t* apu_enable = (volatile uint8_t*)0x4015;
-
 uint8_t pad_sum;
 
 uint8_t random(){
@@ -49,6 +43,7 @@ uint8_t eject_y;
 void player_movement();
 void block_movement(Block* block);
 void bg_collision();
+void block_collision(Block* block);
 
 uint16_t x_pos = FIXED(128);
 uint16_t y_pos = FIXED(208);
@@ -165,7 +160,7 @@ void run_game(){
   }
   //   vram_adr(NTADR_A(0,0));
   // vram_fill(0,128);
-  const uint8_t top_row[24] = {
+  constexpr uint8_t top_row[24] = {
     2,4,
     2,4,
     2,4,
@@ -179,7 +174,7 @@ void run_game(){
     2,4,
     2,4,
   };
-    const uint8_t bottom_row[24] = {
+    constexpr uint8_t bottom_row[24] = {
     3,5,
     3,5,
     3,5,
@@ -208,12 +203,7 @@ void run_game(){
     ppu_wait_nmi();
 
     frames_since_last_spawn++;
-    uint8_t blocks_on_screen = 0; //optimize later
-    for(Block block : blocks){
-      if(block.shouldExist){
-        blocks_on_screen++;
-      }
-    }
+    
     if(frames_since_last_spawn>25){
       spawnBlock();
       frames_since_last_spawn = 0;
