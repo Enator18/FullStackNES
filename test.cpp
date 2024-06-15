@@ -296,42 +296,43 @@ void player_movement()
 
     pad_sum += pad;
     
-    if(!player_dead){
-    if (pad & PAD_LEFT)
+    if(!player_dead)
     {
-      x_vel -= FIXED(0.25);
-    }
-    else if (pad & PAD_RIGHT)
-    {
-      x_vel += FIXED(0.25);
-    }
-
-    else if (x_vel > 0)
-    {
-      x_vel -= FIXED(0.25);
-    }
-
-    else if (x_vel < 0)
-    {
-      x_vel += FIXED(0.25);
-    }
-
-    if (on_ground)
-    {
-      if (pad & PAD_A)
+      if (pad & PAD_LEFT)
       {
-        if (!jumped)
+        x_vel -= FIXED(0.25);
+      }
+      else if (pad & PAD_RIGHT)
+      {
+        x_vel += FIXED(0.25);
+      }
+
+      else if (x_vel > 0)
+      {
+        x_vel -= FIXED(0.25);
+      }
+
+      else if (x_vel < 0)
+      {
+        x_vel += FIXED(0.25);
+      }
+
+      if (on_ground)
+      {
+        if (pad & PAD_A)
         {
-          on_ground = 0;
-          jumped = 1;
-          y_vel = SFIXED(-7);
+          if (!jumped)
+          {
+            on_ground = 0;
+            jumped = 1;
+            y_vel = SFIXED(-7);
+          }
+        }
+        else
+        {
+          jumped = 0;
         }
       }
-      else
-      {
-        jumped = 0;
-      }
-    }
     }
 
     //Gravity
