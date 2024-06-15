@@ -146,7 +146,7 @@ void spawnBlock(){
 }
 
 
-void reset_game(){
+void run_game(){
   x_pos = FIXED(128);
   y_pos = FIXED(208);
   x_vel = 0;
@@ -294,7 +294,7 @@ int main(void)
   // *sq1_pitch_low = 0xc9;
   // *sq1_pitch_high = 0;
   while(1){
-    reset_game();
+    run_game();
   }
 
 }
