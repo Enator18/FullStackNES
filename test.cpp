@@ -411,7 +411,7 @@ void player_movement()
     if (collision)
     {
       y_pos -= ((uint16_t)eject_y) << 8;
-      *((uint8_t*)&y_pos) = 224;
+      *((uint8_t*)&y_pos) = 192;
       y_vel = 0;
     }
 }
@@ -444,7 +444,7 @@ void block_movement(Block* block){
       if (collision)
       {
         y_pos -= ((uint16_t)eject_y) << 8;
-        *((uint8_t*)&y_pos) = 224;
+        *((uint8_t*)&y_pos) = 192;
         y_vel = FIXED(4);
       }
     }
