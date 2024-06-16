@@ -126,11 +126,20 @@ bool playerIntersect(uint8_t blockx, uint8_t blocky){
   return true;
 }
 
+bool columnOk(uint8_t col){
+  for(Block b : blocks){
+    if(b.shouldExist && b.col==col && b.ypos < 17){
+      return false;
+    }
+  }
+  return true;
+}
+
 void spawnBlock(){
   Block new_block;
   do{
     new_block.col = random()%12;
-  }while(columns[new_block.col]>207);
+  }while(columns[new_block.col]>207 || !columnOk(new_block.col));
   new_block.xpos = (new_block.col + 2) << 4;
   new_block.shouldExist = true;
   for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
