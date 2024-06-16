@@ -505,8 +505,8 @@ void block_collision(Block* block)
   if ((left >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
   {
     ++collision;
-    eject_x = block->xpos + 16 - left;
-    eject_y = block->ypos + 16 - up;
+    eject_x = left - block->xpos - 16;
+    eject_y = up - block->ypos - 16;
 
     if (on_ground)
     {
@@ -517,7 +517,7 @@ void block_collision(Block* block)
   if ((right >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
   {
     ++collision;
-    eject_x = right - block->xpos;
+    eject_x = right - block->xpos + 1;
     eject_y = up - block->ypos - 16;
 
     if (on_ground)
@@ -530,15 +530,15 @@ void block_collision(Block* block)
   {
     ++on_ground;
     ++collision;
-    eject_x = block->xpos + 16 - left;
-    eject_y = down - block->ypos;
+    eject_x = left - block->xpos - 16;
+    eject_y = down - block->ypos + 1;
   }
 
   if ((right >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
   {
     ++on_ground;
     ++collision;
-    eject_x = right - block->xpos;
-    eject_y = down - block->ypos;
+    eject_x = right - block->xpos + 1;
+    eject_y = down - block->ypos + 1;
   }
 }
