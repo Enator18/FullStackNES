@@ -45,8 +45,8 @@ void block_movement(Block* block);
 void bg_collision();
 void block_collision(Block* block);
 
-uint16_t x_pos = FIXED(128);
-uint16_t y_pos = FIXED(208);
+uint16_t x_pos;
+uint16_t y_pos;
 
 
 
@@ -143,7 +143,7 @@ void spawnBlock(){
 
 
 void run_game(){
-  x_pos = FIXED(128);
+  x_pos = FIXED(124);
   y_pos = FIXED(208);
   x_vel = 0;
   y_vel = 0;
@@ -272,8 +272,8 @@ void run_game(){
 }
 int main(void)
 {
-  const unsigned char palette[4]={ 0x37, 0x0f, 0x17, 0x07 };
-  static const char palette_sp[8] = { 0x0f, 0x30, 0x1c, 0x2c, 0x0f, 0x0f, 0x17, 0x07 };
+  static const uint8_t palette[16]={ 0x0f, 0x07, 0x37, 0x17 };
+  static const uint8_t palette_sp[16] = { 0x0f, 0x30, 0x0f, 0x00, 0x0f, 0x07, 0x37, 0x17 };
 
   //Draw Background and set PPU Settings
   ppu_off();
