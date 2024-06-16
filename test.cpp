@@ -37,8 +37,8 @@ uint8_t jumped;
 uint8_t collision;
 uint8_t floor_collision;
 
-uint8_t eject_x;
-uint8_t eject_y;
+int8_t eject_x;
+int8_t eject_y;
 
 void player_movement();
 void block_movement(Block* block);
@@ -57,6 +57,7 @@ uint8_t block_x = 112;
 uint8_t block_y = 0;
 
 uint8_t on_ground;
+uint8_t squished;
 
 constexpr uint8_t starting_c_map[240] =
 {
@@ -216,11 +217,17 @@ void run_game(){
     //move dude
     player_movement();
 
+    squished = 0;
     //move stuff
     for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: Length of blocks
       if(blocks[i].shouldExist){
         block_movement(&(blocks[i]));
       }
+    }
+
+    if (squished)
+    {
+      player_dead = true;
     }
 
     //hardware hell
@@ -336,9 +343,13 @@ void player_movement()
     }
 
     //Gravity
-    if (y_vel < SFIXED(4))
+    if (y_vel < SFIXED(5))
     {
       y_vel += pad & PAD_A ? FIXED(0.25) : FIXED(0.75);
+    }
+    else
+    {
+      y_vel = SFIXED(5);
     }
 
     int16_t max_speed = pad & PAD_B ? SFIXED(3) : SFIXED(2);
@@ -362,6 +373,24 @@ void player_movement()
     {
       x_pos -= ((uint16_t)eject_x) << 8;
       x_vel = 0;
+    }
+
+    else
+    {
+      for (uint8_t i = 0; i < 16; i++)
+      {
+        if (blocks[i].shouldExist)
+        {
+          block_collision(&blocks[i]);
+          if (collision)
+          {
+            x_pos -= ((uint16_t)eject_x) << 8;
+            x_vel = 0;
+
+            break;
+          }
+        }
+      }
     }
 
 
@@ -391,8 +420,20 @@ void block_movement(Block* block){
         }
       }
       // spawnBlock();
-    }else if (playerIntersect(block->xpos, block->ypos)) {
-      player_dead = true;
+    }
+    // else if (playerIntersect(block->xpos, block->ypos)) {
+    //   player_dead = true;
+    // }
+
+    else
+    {
+      block_collision(block);
+
+      if (collision)
+      {
+        y_pos -= ((uint16_t)eject_y) << 8;
+        y_vel = 0;
+      }
     }
   }
 }
@@ -447,5 +488,57 @@ void bg_collision()
     ++on_ground;
     eject_x = (right & 0x0f) + 1;
     eject_y = (down & 0x0f) + 1;
+  }
+}
+
+void block_collision(Block* block)
+{
+  collision = 0;
+  eject_x = 0;
+  eject_y = 0;
+
+  uint8_t left = (uint8_t)(x_pos >> 8);
+  uint8_t up = (uint8_t)(y_pos >> 8);
+  uint8_t right = left + 7;
+  uint8_t down = up + 15;
+
+  if ((left >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
+  {
+    ++collision;
+    eject_x = block->xpos + 16 - left;
+    eject_y = block->ypos + 16 - up;
+
+    if (on_ground)
+    {
+      ++squished;
+    }
+  }
+
+  if ((right >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
+  {
+    ++collision;
+    eject_x = right - block->xpos;
+    eject_y = up - block->ypos - 16;
+
+    if (on_ground)
+    {
+      ++squished;
+    }
+  }
+
+  if ((left >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
+  {
+    ++on_ground;
+    ++collision;
+    eject_x = block->xpos + 16 - left;
+    eject_y = down - block->ypos;
+  }
+
+  if ((right >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
+  {
+    ++on_ground;
+    ++collision;
+    eject_x = right - block->xpos;
+    eject_y = down - block->ypos;
   }
 }
