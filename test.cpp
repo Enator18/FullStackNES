@@ -66,8 +66,8 @@ constexpr uint8_t starting_c_map[240] =
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -372,6 +372,7 @@ void player_movement()
     if (collision)
     {
       x_pos -= ((uint16_t)eject_x) << 8;
+      *((uint8_t*)&x_pos) = 0;
       x_vel = 0;
     }
 
@@ -385,6 +386,7 @@ void player_movement()
           if (collision)
           {
             x_pos -= ((uint16_t)eject_x) << 8;
+            *((uint8_t*)&x_pos) = 0;
             x_vel = 0;
 
             break;
@@ -400,6 +402,7 @@ void player_movement()
     if (collision)
     {
       y_pos -= ((uint16_t)eject_y) << 8;
+      *((uint8_t*)&y_pos) = 0;
       y_vel = 0;
     }
 }
@@ -432,6 +435,7 @@ void block_movement(Block* block){
       if (collision)
       {
         y_pos -= ((uint16_t)eject_y) << 8;
+        *((uint8_t*)&y_pos) = 0;
         y_vel = FIXED(4);
       }
     }
