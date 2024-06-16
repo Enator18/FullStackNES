@@ -432,7 +432,7 @@ void block_movement(Block* block){
       if (collision)
       {
         y_pos -= ((uint16_t)eject_y) << 8;
-        y_vel = 0;
+        y_vel = FIXED(4);
       }
     }
   }
