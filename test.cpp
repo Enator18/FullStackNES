@@ -435,7 +435,7 @@ void player_movement()
     if (collision)
     {
       y_pos -= eject_y;
-      y_pos.set_f(192);
+      y_pos.set_f(12);
       y_vel = 0;
     }
 }
@@ -468,7 +468,7 @@ void block_movement(Block* block){
       if (collision)
       {
         y_pos -= eject_y;
-      y_pos.set_f(192);
+      y_pos.set_f(12);
         y_vel = 4.0_12_4;
       }
     }
