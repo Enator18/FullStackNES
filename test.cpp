@@ -66,6 +66,9 @@ uint8_t block_y = 0;
 uint8_t on_ground;
 uint8_t squished;
 
+uint16_t scroll_wait;
+uint8_t scrolling;
+
 uint16_t y_scroll;
 
 // constexpr uint8_t starting_c_map[240] =
@@ -155,6 +158,8 @@ void run_game(){
   // x_pos = 5.588;
   x_vel = 0;
   y_vel = 0;
+  scroll_wait = 0;
+  scrolling = 0;
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
   y_scroll = 0;
@@ -216,12 +221,24 @@ void run_game(){
   {
     update_pause();
     ppu_wait_nmi();
-    if(!paused){
-      if (!(get_frame_count() % 18))
+    if(!paused)
+    {
+      if (scrolling)
       {
-        y_scroll = sub_scroll_y(1, y_scroll);
+        if (!(get_frame_count() % 18))
+        {
+          y_scroll = sub_scroll_y(1, y_scroll);
 
-        set_scroll_y(y_scroll);
+          set_scroll_y(y_scroll);
+        }
+      }
+      else
+      {
+        scroll_wait++;
+        if (scroll_wait > 864)
+        {
+          scrolling = 1;
+        }
       }
 
       frames_since_last_spawn++;
