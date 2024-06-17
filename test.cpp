@@ -14,6 +14,8 @@ MAPPER_USE_HORIZONTAL_MIRRORING;
 #define SFIXED(float_literal) (int16_t)(float_literal * 256.0)
 #define HIGH_BYTE(a) *((uint8_t*)&a+1)
 bool player_dead = false;
+uint8_t paused = 0;
+uint8_t paused_down = 0;
 
 uint8_t pad_sum;
 
@@ -44,9 +46,11 @@ void player_movement();
 void block_movement(Block* block);
 void bg_collision();
 void block_collision(Block* block);
+void update_pause();
 
 uint16_t x_pos;
 uint16_t y_pos;
+uint8_t player_dir;
 
 
 
@@ -61,24 +65,24 @@ uint8_t squished;
 
 uint16_t y_scroll;
 
-constexpr uint8_t starting_c_map[240] =
-{
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
-};
+// constexpr uint8_t starting_c_map[240] =
+// {
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+//   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+// };
 uint8_t c_map[240];
  
 uint8_t block_sprite[9] = 
@@ -160,8 +164,12 @@ void run_game(){
   y_vel = 0;
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
-  for(uint8_t i = 0; i < 240; i++){
-    c_map[i] = starting_c_map[i];
+  for(uint8_t i = 0; i < 224; i++){
+    c_map[i] = 1 - (((i%16)>1)&((i%16)<14));
+    // c_map[i] = starting_c_map[i];
+  }
+  for(uint8_t i = 224; i < 240; i++){
+    c_map[i] = 1;
   }
   for(uint8_t i = 0; i < 16; i++){
     cols_to_change[i]=12;
@@ -212,63 +220,66 @@ void run_game(){
 
   while (!player_dead)
   {
+    update_pause();
     ppu_wait_nmi();
-    // if (!(get_frame_count() % 18))
-    // {
-    //   y_scroll = sub_scroll_y(1, y_scroll);
+    if(!paused){
+      // if (!(get_frame_count() % 18))
+      // {
+      //   y_scroll = sub_scroll_y(1, y_scroll);
 
-    //   set_scroll_y(y_scroll);
-    // }
+      //   set_scroll_y(y_scroll);
+      // }
 
-    frames_since_last_spawn++;
-    
-    if(frames_since_last_spawn>24){
-      spawnBlock();
-      frames_since_last_spawn = 0;
-    }
-    // *sq1_pitch_low = rand8();
-    // *sq1_vol = (rand8() & 0b11000000) + 0b00111111;
-    //wait
-
-    
-    //move dude
-    player_movement();
-
-    squished = 0;
-    //move stuff
-    for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: Length of blocks
-      if(blocks[i].shouldExist){
-        block_movement(&(blocks[i]));
+      frames_since_last_spawn++;
+      
+      if(frames_since_last_spawn>24){
+        spawnBlock();
+        frames_since_last_spawn = 0;
       }
-    }
+      // *sq1_pitch_low = rand8();
+      // *sq1_vol = (rand8() & 0b11000000) + 0b00111111;
+      //wait
 
-    if (squished)
-    {
-      player_dead = true;
-    }
+      
+      //move dude
+      player_movement();
 
-    //hardware hell
-    set_vram_buffer();
-    for(uint8_t i = 0; i < 16; i++){
-      if(cols_to_change[i]==12){
-        break;
+      squished = 0;
+      //move stuff
+      for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: Length of blocks
+        if(blocks[i].shouldExist){
+          block_movement(&(blocks[i]));
+        }
       }
-        uint8_t tiles[2] = {
-          2,3
-        };
-        multi_vram_buffer_vert(tiles, sizeof(tiles),
-                            NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3));
-        tiles[0] = 4;
-        tiles[1] = 5;
-        multi_vram_buffer_vert(tiles, sizeof(tiles),
-                      NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3));
-        cols_to_change[i] = 12;
-    }
-    oam_clear();
-    oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1 - y_scroll), 0x01, 0x00);
-    for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
-      if(blocks[i].shouldExist){
-        oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - y_scroll, block_sprite);
+
+      if (squished)
+      {
+        player_dead = true;
+      }
+
+      //hardware hell
+      set_vram_buffer();
+      for(uint8_t i = 0; i < 16; i++){
+        if(cols_to_change[i]==12){
+          break;
+        }
+          uint8_t tiles[2] = {
+            2,3
+          };
+          multi_vram_buffer_vert(tiles, sizeof(tiles),
+                              NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3));
+          tiles[0] = 4;
+          tiles[1] = 5;
+          multi_vram_buffer_vert(tiles, sizeof(tiles),
+                        NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3));
+          cols_to_change[i] = 12;
+      }
+      oam_clear();
+      oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1 - y_scroll), 0x01, player_dir);
+      for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
+        if(blocks[i].shouldExist){
+          oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - y_scroll, block_sprite);
+        }
       }
     }
   }
@@ -313,6 +324,14 @@ int main(void)
 
 }
 
+void update_pause(){
+  uint8_t pad = pad_poll(0);
+  if(!paused_down){
+    paused = (paused ^ (pad & PAD_SELECT));
+  }
+  paused_down = (pad & PAD_SELECT);
+}
+
 void player_movement()
 {
     //Player Input
@@ -325,10 +344,12 @@ void player_movement()
       if (pad & PAD_LEFT)
       {
         x_vel -= FIXED(0.25);
+        player_dir = 64;
       }
       else if (pad & PAD_RIGHT)
       {
         x_vel += FIXED(0.25);
+        player_dir = 0;
       }
 
       else if (x_vel > 0)
