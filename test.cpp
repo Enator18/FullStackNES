@@ -51,8 +51,8 @@ void bg_collision();
 void block_collision(Block* block);
 void update_pause();
 
-FixedPoint<12, 4> x_pos = 0;
-FixedPoint<12, 4> y_pos = 0;
+FixedPoint<12, 4, false> x_pos = 0;
+FixedPoint<12, 4, false> y_pos = 0;
 uint8_t player_dir;
 
 
