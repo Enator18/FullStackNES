@@ -59,6 +59,8 @@ uint8_t block_y = 0;
 uint8_t on_ground;
 uint8_t squished;
 
+uint16_t y_scroll;
+
 constexpr uint8_t starting_c_map[240] =
 {
   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
@@ -211,10 +213,16 @@ void run_game(){
   while (!player_dead)
   {
     ppu_wait_nmi();
+    // if (!(get_frame_count() % 18))
+    // {
+    //   y_scroll = sub_scroll_y(1, y_scroll);
+
+    //   set_scroll_y(y_scroll);
+    // }
 
     frames_since_last_spawn++;
     
-    if(frames_since_last_spawn>25){
+    if(frames_since_last_spawn>24){
       spawnBlock();
       frames_since_last_spawn = 0;
     }
@@ -257,10 +265,10 @@ void run_game(){
         cols_to_change[i] = 12;
     }
     oam_clear();
-    oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1), 0x01, 0x00);
+    oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1 - y_scroll), 0x01, 0x00);
     for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
       if(blocks[i].shouldExist){
-        oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1, block_sprite);
+        oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - y_scroll, block_sprite);
       }
     }
   }
