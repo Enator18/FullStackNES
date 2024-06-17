@@ -20,13 +20,13 @@ uint8_t paused_down = 0;
 uint8_t pad_sum;
 
 uint8_t random(){
-  set_rand(rand8() + pad_sum);
+  set_rand(rand8() + (pad_sum << 8));
 
   return rand8();
 }
 
 typedef struct Block {
-  uint8_t ypos = 0;
+  int16_t ypos = 0;
   uint8_t xpos = 144; // (2 + col) * 16
   uint8_t col = 12;
   bool shouldExist = false;
@@ -84,6 +84,11 @@ uint16_t y_scroll;
 //   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 // };
 uint8_t c_map[240];
+// uint8_t get_normal_column(){
+//   uint8_t r1 = (random()%6);
+//   uint8_t r2 = (random()%6);
+//   return r1 + r2 + 1;
+// }
  
 uint8_t block_sprite[9] = 
 {
@@ -150,6 +155,7 @@ void spawnBlock(){
   new_block.shouldExist = true;
   for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
     if(!blocks[i].shouldExist){
+      new_block.ypos += y_scroll;
       blocks[i] = new_block;
       break;
     }
@@ -160,10 +166,12 @@ void spawnBlock(){
 void run_game(){
   x_pos = FIXED(124);
   y_pos = FIXED(208);
+  // x_pos = 5.588;
   x_vel = 0;
   y_vel = 0;
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
+  y_scroll = 0;
   for(uint8_t i = 0; i < 224; i++){
     c_map[i] = 1 - (((i%16)>1)&((i%16)<14));
     // c_map[i] = starting_c_map[i];
@@ -223,12 +231,12 @@ void run_game(){
     update_pause();
     ppu_wait_nmi();
     if(!paused){
-      // if (!(get_frame_count() % 18))
-      // {
-      //   y_scroll = sub_scroll_y(1, y_scroll);
+      if (!(get_frame_count() % 18))
+      {
+        y_scroll = sub_scroll_y(1, y_scroll);
 
-      //   set_scroll_y(y_scroll);
-      // }
+        set_scroll_y(y_scroll);
+      }
 
       frames_since_last_spawn++;
       
@@ -254,7 +262,7 @@ void run_game(){
 
       if (squished)
       {
-        player_dead = true;
+        // player_dead = true;
       }
 
       //hardware hell
@@ -275,10 +283,10 @@ void run_game(){
           cols_to_change[i] = 12;
       }
       oam_clear();
-      oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1 - y_scroll), 0x01, player_dir);
+      oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1 - (y_scroll&255)) - ((y_scroll>255) << 4), 0x01, player_dir);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
         if(blocks[i].shouldExist){
-          oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - y_scroll, block_sprite);
+          oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - (y_scroll&255) - ((y_scroll>255) << 4), block_sprite);
         }
       }
     }
@@ -297,6 +305,7 @@ void run_game(){
     ppu_wait_nmi();
   }
   //Death animation here
+  y_scroll = 0;
 }
 int main(void)
 {
