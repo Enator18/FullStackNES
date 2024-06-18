@@ -89,7 +89,7 @@ uint16_t y_scroll;
 //   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
 //   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 // };
-uint8_t c_map[240];
+uint8_t c_map[480];
 // uint8_t get_normal_column(){
 //   uint8_t r1 = (random()%6);
 //   uint8_t r2 = (random()%6);
@@ -103,7 +103,7 @@ uint8_t block_sprite[9] =
   128
 };
 
-uint8_t columns[12] = {
+int16_t columns[12] = {
   207,207,207,207,207,207,
   207,207,207,207,207,207
 };
@@ -139,7 +139,7 @@ void spawnBlock(){
   Block new_block;
   do{
     new_block.col = random()%12;
-  }while(columns[new_block.col]>207 || !columnOk(new_block.col));
+  }while(/*columns[new_block.col]>207 || */!columnOk(new_block.col));
   new_block.xpos = (new_block.col + 2) << 4;
   new_block.shouldExist = true;
   for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
@@ -165,11 +165,11 @@ void run_game(){
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
   y_scroll = 0;
-  for(uint8_t i = 0; i < 224; i++){
+  for(uint16_t i = 0; i < 224; i++){
     c_map[i] = 1 - (((i%16)>1)&((i%16)<14));
     // c_map[i] = starting_c_map[i];
   }
-  for(uint8_t i = 224; i < 240; i++){
+  for(uint16_t i = 224; i < 240; i++){
     c_map[i] = 1;
   }
   for(uint8_t i = 0; i < 16; i++){
@@ -267,7 +267,7 @@ void run_game(){
 
       if (squished)
       {
-        player_dead = true;
+        // player_dead = true;
       }
 
       //hardware hell
@@ -279,12 +279,20 @@ void run_game(){
           uint8_t tiles[2] = {
             2,3
           };
+          uint16_t ppuaddr1, ppuaddr2;
+          if(columns[cols_to_change[i]] < 32){
+            ppuaddr1 = NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
+            ppuaddr2 = NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
+          }else{
+            ppuaddr1 = NTADR_B((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
+            ppuaddr2 = NTADR_B((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
+          }
           multi_vram_buffer_vert(tiles, sizeof(tiles),
-                              NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3));
+                              ppuaddr1);
           tiles[0] = 4;
           tiles[1] = 5;
           multi_vram_buffer_vert(tiles, sizeof(tiles),
-                        NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3));
+                        ppuaddr2);
           cols_to_change[i] = 12;
       }
       oam_clear();
@@ -449,7 +457,7 @@ void player_movement()
 
 
     y_pos += y_vel;
-    y_pos %= FIXED(240);
+    y_pos %= 240.0_u12_4;
 
     bg_collision();
     if (collision)
@@ -468,6 +476,9 @@ void block_movement(Block* block){
       block->shouldExist=false;
       c_map[(block->col) + (columns[block->col]) + 3] = 1;
       columns[block->col] -= 16;
+      if(columns[block->col]==15){ //207%16 DO NOT FORGET
+        columns[block->col] -= 16;
+      }
       col_to_change = block->col;
       for(uint8_t i = 0; i < 16; i++){
         if(cols_to_change[i]==12){
