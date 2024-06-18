@@ -2,6 +2,9 @@
 #include <nesdoug.h>
 #include <stdint.h>
 #include <ines.h>
+#include <fixed_point.h>
+
+using namespace fixedpoint_literals;
 
 MAPPER_USE_HORIZONTAL_MIRRORING;
 
@@ -10,9 +13,9 @@ MAPPER_USE_HORIZONTAL_MIRRORING;
 #define LT_GY 0x10
 #define WHITE 0x30
 
-#define FIXED(float_literal) (uint16_t)(float_literal * 256.0)
-#define SFIXED(float_literal) (int16_t)(float_literal * 256.0)
-#define HIGH_BYTE(a) *((uint8_t*)&a+1)
+//#define FIXED(float_literal) (uint16_t)(float_literal * 256.0)
+//#define SFIXED(float_literal) (int16_t)(float_literal * 256.0)
+//#define HIGH_BYTE(a) *((uint8_t*)&a+1)
 bool player_dead = false;
 uint8_t paused = 0;
 uint8_t paused_down = 0;
@@ -48,20 +51,23 @@ void bg_collision();
 void block_collision(Block* block);
 void update_pause();
 
-uint16_t x_pos;
-uint16_t y_pos;
+FixedPoint<12, 4, false> x_pos = 0;
+FixedPoint<12, 4, false> y_pos = 0;
 uint8_t player_dir;
 
 
 
-int16_t x_vel = 0;
-int16_t y_vel = 0;
+FixedPoint<12, 4> x_vel = 0;
+FixedPoint<12, 4> y_vel = 0;
 
 uint8_t block_x = 112;
 uint8_t block_y = 0;
 
 uint8_t on_ground;
 uint8_t squished;
+
+uint16_t scroll_wait;
+uint8_t scrolling;
 
 uint16_t y_scroll;
 
@@ -120,23 +126,6 @@ uint8_t cols_to_change[16] = {
 uint8_t frames_since_last_spawn = 200;
 Block blocks[16];
 
-bool playerIntersect(uint8_t blockx, uint8_t blocky){
-  // within this function, we are the block
-  if(blockx + 15 < uint8_t(x_pos >> 8) ){
-    return false; // we are too far to the right of the player
-  }
-  if(blockx > uint8_t(x_pos >> 8) + 7){
-    return false; // we are too far to the left of the player
-  }
-  if(blocky + 15 < uint8_t(y_pos >> 8)){
-    return false;//our bottom left corner is above the player's top left corner
-  }
-  if(blocky > uint8_t(y_pos >> 8) + 15){
-    return false; // our top left corner is below the player's bottom left corner
-  }
-  return true;
-}
-
 bool columnOk(uint8_t col){
   for(Block b : blocks){
     if(b.shouldExist && b.col==col && b.ypos < 17){
@@ -164,11 +153,15 @@ void spawnBlock(){
 
 
 void run_game(){
-  x_pos = FIXED(124);
-  y_pos = FIXED(208);
+  x_pos = 124.0_u8_8;
+  y_pos = 208.0_u8_8;
   // x_pos = 5.588;
   x_vel = 0;
   y_vel = 0;
+  scroll_wait = 0;
+  scrolling = 0;
+  y_scroll = 0;
+  set_scroll_y(y_scroll);
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
   y_scroll = 0;
@@ -230,12 +223,24 @@ void run_game(){
   {
     update_pause();
     ppu_wait_nmi();
-    if(!paused){
-      if (!(get_frame_count() % 18))
+    if(!paused)
+    {
+      if (scrolling)
       {
-        y_scroll = sub_scroll_y(1, y_scroll);
+        if (!(get_frame_count() % 18))
+        {
+          y_scroll = sub_scroll_y(1, y_scroll);
 
-        set_scroll_y(y_scroll);
+          set_scroll_y(y_scroll);
+        }
+      }
+      else
+      {
+        scroll_wait++;
+        if (scroll_wait > 864)
+        {
+          scrolling = 1;
+        }
       }
 
       frames_since_last_spawn++;
@@ -262,7 +267,7 @@ void run_game(){
 
       if (squished)
       {
-        // player_dead = true;
+        player_dead = true;
       }
 
       //hardware hell
@@ -283,7 +288,7 @@ void run_game(){
           cols_to_change[i] = 12;
       }
       oam_clear();
-      oam_spr((uint8_t)(x_pos >> 8), (uint8_t)((y_pos >> 8) - 1 - (y_scroll&255)) - ((y_scroll>255) << 4), 0x01, player_dir);
+      oam_spr(x_pos.as_i(), (y_pos.as_i() - 1 - (y_scroll&255)) - ((y_scroll>255) << 4), 0x01, player_dir);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
         if(blocks[i].shouldExist){
           oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - (y_scroll&255) - ((y_scroll>255) << 4), block_sprite);
@@ -352,23 +357,23 @@ void player_movement()
     {
       if (pad & PAD_LEFT)
       {
-        x_vel -= FIXED(0.25);
+        x_vel -= 0.25_12_4;
         player_dir = 64;
       }
       else if (pad & PAD_RIGHT)
       {
-        x_vel += FIXED(0.25);
+        x_vel += 0.25_12_4;
         player_dir = 0;
       }
 
       else if (x_vel > 0)
       {
-        x_vel -= FIXED(0.25);
+        x_vel -= 0.25_12_4;
       }
 
       else if (x_vel < 0)
       {
-        x_vel += FIXED(0.25);
+        x_vel += 0.25_12_4;
       }
 
       if (on_ground)
@@ -379,7 +384,7 @@ void player_movement()
           {
             on_ground = 0;
             jumped = 1;
-            y_vel = SFIXED(-7);
+            y_vel = -7.0_12_4;
           }
         }
         else
@@ -390,16 +395,16 @@ void player_movement()
     }
 
     //Gravity
-    if (y_vel < SFIXED(5))
+    if (y_vel < 5.0_12_4)
     {
-      y_vel += pad & PAD_A ? FIXED(0.25) : FIXED(0.75);
+      y_vel += pad & PAD_A ? 0.25_12_4 : 0.75_12_4;
     }
     else
     {
-      y_vel = SFIXED(5);
+      y_vel = 5.0_12_4;
     }
 
-    int16_t max_speed = pad & PAD_B ? SFIXED(3) : SFIXED(2);
+    FixedPoint<12, 4> max_speed = pad & PAD_B ? 3.0_12_4 : 2.0_12_4;
 
     //Cap Velocity
     if (x_vel > max_speed)
@@ -418,8 +423,8 @@ void player_movement()
     bg_collision();
     if (collision)
     {
-      x_pos -= ((uint16_t)eject_x) << 8;
-      *((uint8_t*)&x_pos) = 0;
+      x_pos -= eject_x;
+      x_pos.set_f(0);
       x_vel = 0;
     }
 
@@ -432,8 +437,8 @@ void player_movement()
           block_collision(&blocks[i]);
           if (collision)
           {
-            x_pos -= ((uint16_t)eject_x) << 8;
-            *((uint8_t*)&x_pos) = 0;
+            x_pos -= eject_x;
+            x_pos.set_f(0);
             x_vel = 0;
 
             break;
@@ -449,8 +454,8 @@ void player_movement()
     bg_collision();
     if (collision)
     {
-      y_pos -= ((uint16_t)eject_y) << 8;
-      *((uint8_t*)&y_pos) = 192;
+      y_pos -= eject_y;
+      y_pos.set_f(12);
       y_vel = 0;
     }
 }
@@ -482,9 +487,9 @@ void block_movement(Block* block){
 
       if (collision)
       {
-        y_pos -= ((uint16_t)eject_y) << 8;
-        *((uint8_t*)&y_pos) = 192;
-        y_vel = FIXED(4);
+        y_pos -= eject_y;
+      y_pos.set_f(12);
+        y_vel = 4.25_12_4;
       }
     }
   }
@@ -497,8 +502,8 @@ void bg_collision()
   eject_x = 0;
   eject_y = 0;
 
-  uint8_t left = (uint8_t)(x_pos >> 8);
-  uint8_t up = (uint8_t)(y_pos >> 8);
+  uint8_t left = x_pos.as_i();
+  uint8_t up = y_pos.as_i();
   uint8_t right = left + 7;
   uint8_t down = up + 15;
 
@@ -549,8 +554,8 @@ void block_collision(Block* block)
   eject_x = 0;
   eject_y = 0;
 
-  uint8_t left = (uint8_t)(x_pos >> 8);
-  uint8_t up = (uint8_t)(y_pos >> 8);
+  uint8_t left = x_pos.as_i();
+  uint8_t up = y_pos.as_i();
   uint8_t right = left + 7;
   uint8_t down = up + 15;
 
