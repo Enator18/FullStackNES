@@ -160,6 +160,8 @@ void run_game(){
   y_vel = 0;
   scroll_wait = 0;
   scrolling = 0;
+  y_scroll = 0;
+  set_scroll_y(y_scroll);
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
   y_scroll = 0;
@@ -265,7 +267,7 @@ void run_game(){
 
       if (squished)
       {
-        // player_dead = true;
+        player_dead = true;
       }
 
       //hardware hell
@@ -486,7 +488,7 @@ void block_movement(Block* block){
       {
         y_pos -= eject_y;
       y_pos.set_f(12);
-        y_vel = 4.0_12_4;
+        y_vel = 4.25_12_4;
       }
     }
   }
