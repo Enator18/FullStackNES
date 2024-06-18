@@ -68,7 +68,7 @@ uint8_t squished;
 
 uint16_t scroll_wait;
 uint8_t scrolling;
-
+uint8_t scroll_timer;
 uint16_t y_scroll;
 
 // constexpr uint8_t starting_c_map[240] =
@@ -228,11 +228,15 @@ void run_game(){
     {
       if (scrolling)
       {
-        if (!(get_frame_count() % 18))
+        scroll_timer++;
+
+        if (scroll_timer >= 18)
         {
           y_scroll = sub_scroll_y(1, y_scroll);
 
           set_scroll_y(y_scroll);
+
+          scroll_timer = 0;
         }
       }
       else
@@ -246,7 +250,7 @@ void run_game(){
 
       frames_since_last_spawn++;
       
-      if(frames_since_last_spawn>24){
+      if(frames_since_last_spawn>=24){
         spawnBlock();
         frames_since_last_spawn = 0;
       }
