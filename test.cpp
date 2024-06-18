@@ -444,6 +444,7 @@ void player_movement()
 
 
     y_pos += y_vel;
+    y_pos %= FIXED(240);
 
     bg_collision();
     if (collision)
