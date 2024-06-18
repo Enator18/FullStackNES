@@ -6,7 +6,7 @@
 
 using namespace fixedpoint_literals;
 
-MAPPER_USE_HORIZONTAL_MIRRORING;
+MAPPER_USE_VERTICAL_MIRRORING;
 
 #define BLACK 0x0f
 #define DK_GY 0x00
@@ -29,7 +29,7 @@ uint8_t random(){
 }
 
 typedef struct Block {
-  int16_t ypos = 0;
+  uint8_t ypos = 0;
   uint8_t xpos = 144; // (2 + col) * 16
   uint8_t col = 12;
   bool shouldExist = false;
@@ -89,7 +89,7 @@ uint16_t y_scroll;
 //   1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
 //   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 // };
-uint8_t c_map[480];
+uint8_t c_map[240];
 // uint8_t get_normal_column(){
 //   uint8_t r1 = (random()%6);
 //   uint8_t r2 = (random()%6);
@@ -103,7 +103,7 @@ uint8_t block_sprite[9] =
   128
 };
 
-int16_t columns[12] = {
+uint8_t columns[12] = {
   207,207,207,207,207,207,
   207,207,207,207,207,207
 };
@@ -139,12 +139,13 @@ void spawnBlock(){
   Block new_block;
   do{
     new_block.col = random()%12;
-  }while(/*columns[new_block.col]>207 || */!columnOk(new_block.col));
+  }while(/*columns[new_block.col]>207 || */!columnOk(new_block.col)); //Only matters if spawning blocks rapidly
   new_block.xpos = (new_block.col + 2) << 4;
   new_block.shouldExist = true;
   for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
     if(!blocks[i].shouldExist){
-      new_block.ypos += y_scroll;
+      new_block.ypos += (uint8_t)(y_scroll&255);
+      new_block.ypos %=240;
       blocks[i] = new_block;
       break;
     }
@@ -153,8 +154,8 @@ void spawnBlock(){
 
 
 void run_game(){
-  x_pos = 124.0_u8_8;
-  y_pos = 208.0_u8_8;
+  x_pos = 124.0_u12_4;
+  y_pos = 208.0_u12_4;
   // x_pos = 5.588;
   x_vel = 0;
   y_vel = 0;
@@ -165,11 +166,11 @@ void run_game(){
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
   y_scroll = 0;
-  for(uint16_t i = 0; i < 224; i++){
+  for(uint8_t i = 0; i < 224; i++){
     c_map[i] = 1 - (((i%16)>1)&((i%16)<14));
     // c_map[i] = starting_c_map[i];
   }
-  for(uint16_t i = 224; i < 240; i++){
+  for(uint8_t i = 224; i < 240; i++){
     c_map[i] = 1;
   }
   for(uint8_t i = 0; i < 16; i++){
@@ -280,13 +281,13 @@ void run_game(){
             2,3
           };
           uint16_t ppuaddr1, ppuaddr2;
-          if(columns[cols_to_change[i]] < 32){
+          // if(columns[cols_to_change[i]] < 32){
             ppuaddr1 = NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
             ppuaddr2 = NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
-          }else{
-            ppuaddr1 = NTADR_B((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
-            ppuaddr2 = NTADR_B((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
-          }
+          // }else{
+          //   ppuaddr1 = NTADR_B((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
+          //   ppuaddr2 = NTADR_B((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
+          // }
           multi_vram_buffer_vert(tiles, sizeof(tiles),
                               ppuaddr1);
           tiles[0] = 4;
@@ -463,6 +464,7 @@ void player_movement()
     if (collision)
     {
       y_pos -= eject_y;
+      y_pos %= 240.0_u12_4;
       y_pos.set_f(12);
       y_vel = 0;
     }
@@ -472,7 +474,8 @@ void block_movement(Block* block){
   uint8_t col_to_change = 12;
   if(block->shouldExist){
     block->ypos+=4;
-    if(block->ypos>=columns[block->col]){
+    block->ypos%=240;
+    if(block->ypos >> 2 ==(columns[block->col] >> 2)+1){
       block->shouldExist=false;
       c_map[(block->col) + (columns[block->col]) + 3] = 1;
       columns[block->col] -= 16;
