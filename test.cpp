@@ -321,10 +321,11 @@ void run_game(){
           cols_to_change[i] = 12;
       }
       oam_clear();
-      oam_spr(x_pos.as_i(), (y_pos.as_i() - 1 - (y_scroll&255)) - ((y_scroll>255) << 4), 0x01, player_dir);
+
+      oam_spr(x_pos.as_i(), y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > y_pos.as_i()) << 4), 0x01, player_dir);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
         if(blocks[i].shouldExist){
-          oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - (y_scroll&255) - ((y_scroll>255) << 4), block_sprite);
+          oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - (y_scroll&255) - (((y_scroll&255) > blocks[i].ypos) << 4), block_sprite);
         }
       }
     }
