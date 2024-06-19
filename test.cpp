@@ -151,8 +151,7 @@ void spawnBlock(){
   new_block.shouldExist = true;
   for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
     if(!blocks[i].shouldExist){
-      new_block.ypos += (uint8_t)(y_scroll&255);
-      new_block.ypos %=240;
+      new_block.ypos = (uint8_t)(y_scroll&255);
       blocks[i] = new_block;
       break;
     }
