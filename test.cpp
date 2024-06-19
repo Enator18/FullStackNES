@@ -118,6 +118,13 @@ uint8_t cols_to_change[16] = {
   12, 12, 12, 12,
 };
 
+uint8_t blank_row[24] = {
+    0,0,0,0,0,0,
+    0,0,0,0,0,0,
+    0,0,0,0,0,0,
+    0,0,0,0,0,0,
+  };
+
 // uint8_t getIndexOfEmptyCollider(uint8_t column){
 //   for(uint8_t i = 0; i < 15; i++){
 
@@ -222,10 +229,12 @@ void run_game(){
 
   while (!player_dead)
   {
-    update_pause();
     ppu_wait_nmi();
+    update_pause();
     if(!paused)
     {
+      set_vram_buffer();
+
       if (scrolling)
       {
         scroll_timer++;
@@ -237,6 +246,19 @@ void run_game(){
           set_scroll_y(y_scroll);
 
           scroll_timer = 0;
+
+          if (!(y_scroll & 0x07))
+          {
+            multi_vram_buffer_horz(blank_row, sizeof(blank_row), NTADR_A(4, (uint8_t)(y_scroll) >> 3));
+
+            if (!(y_scroll & 0x0f))
+            {
+              for (uint8_t i = 0; i < 12; i++)
+              {
+                c_map[i + (y_scroll & 0x00f0) + 2] = 0;
+              }
+            }
+          }
         }
       }
       else
@@ -276,7 +298,6 @@ void run_game(){
       }
 
       //hardware hell
-      set_vram_buffer();
       for(uint8_t i = 0; i < 16; i++){
         if(cols_to_change[i]==12){
           break;
@@ -309,12 +330,7 @@ void run_game(){
       }
     }
   }
-  uint8_t blank_row[24] = {
-    0,0,0,0,0,0,
-    0,0,0,0,0,0,
-    0,0,0,0,0,0,
-    0,0,0,0,0,0,
-  };
+  
   oam_clear();
   for(uint8_t i = 0; i < 28; i++){
     set_vram_buffer();
@@ -462,13 +478,13 @@ void player_movement()
 
 
     y_pos += y_vel;
-    y_pos %= 240.0_u12_4;
+    //y_pos %= 240.0_u12_4;
 
     bg_collision();
     if (collision)
     {
       y_pos -= eject_y;
-      y_pos %= 240.0_u12_4;
+      //y_pos %= 240.0_u12_4;
       y_pos.set_f(12);
       y_vel = 0;
     }
@@ -483,7 +499,7 @@ void block_movement(Block* block){
       block->shouldExist=false;
       c_map[(block->col) + (columns[block->col]) + 3] = 1;
       columns[block->col] -= 16;
-      if(columns[block->col]==15){ //207%16 DO NOT FORGET
+      if(columns[block->col]>=240){ //207%16 DO NOT FORGET
         columns[block->col] -= 16;
       }
       col_to_change = block->col;
@@ -506,7 +522,7 @@ void block_movement(Block* block){
       if (collision)
       {
         y_pos -= eject_y;
-      y_pos.set_f(12);
+        y_pos.set_f(12);
         y_vel = 4.25_12_4;
       }
     }
