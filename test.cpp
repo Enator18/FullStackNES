@@ -257,25 +257,22 @@ void run_game(){
           set_scroll_y(y_scroll);
 
           scroll_timer = 0;
-
-          if (!(y_scroll & 0x07))
+          if (!(y_scroll & 0x0f))
           {
             multi_vram_buffer_horz(blank_row, sizeof(blank_row), NTADR_A(4, (uint8_t)(y_scroll) >> 3));
+            multi_vram_buffer_horz(blank_row, sizeof(blank_row), NTADR_A(4, ((uint8_t)(y_scroll) >> 3) + 1));
 
-            if (!(y_scroll & 0x0f))
+            for (uint8_t i = 0; i < 12; i++)
             {
-              for (uint8_t i = 0; i < 12; i++)
+              c_map[i + (y_scroll & 0x00f0) + 2] = 0;
+
+              if (columns[i] == (y_scroll & 0x00f0))
               {
-                c_map[i + (y_scroll & 0x00f0) + 2] = 0;
+                columns[i] -= 16;
 
-                if (columns[i] == (y_scroll & 0x00f0))
+                if(columns[i]==240)
                 {
-                  columns[i] -= 16;
-
-                  if(columns[i]==240)
-                  {
-                    columns[i] = 224;
-                  }
+                  columns[i] = 224;
                 }
               }
             }
