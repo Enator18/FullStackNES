@@ -51,14 +51,14 @@ void bg_collision();
 void block_collision(Block* block);
 void update_pause();
 
-FixedPoint<12, 4, false> x_pos = 0;
-FixedPoint<12, 4, false> y_pos = 0;
+FixedPoint<8, 8, false> x_pos = 0;
+FixedPoint<8, 8, false> y_pos = 0;
 uint8_t player_dir;
 
 
 
-FixedPoint<12, 4> x_vel = 0;
-FixedPoint<12, 4> y_vel = 0;
+FixedPoint<8, 8> x_vel = 0;
+FixedPoint<8, 8> y_vel = 0;
 
 uint8_t block_x = 112;
 uint8_t block_y = 0;
@@ -96,7 +96,7 @@ uint8_t c_map[240];
 //   return r1 + r2 + 1;
 // }
  
-uint8_t block_sprite[9] = 
+constexpr uint8_t block_sprite[9] = 
 {
   0, 0, 0x02, 0x01,
   8, 0, 0x04, 0x01,
@@ -118,7 +118,7 @@ uint8_t cols_to_change[16] = {
   12, 12, 12, 12,
 };
 
-uint8_t blank_row[24] = {
+constexpr uint8_t blank_row[24] = {
     0,0,0,0,0,0,
     0,0,0,0,0,0,
     0,0,0,0,0,0,
@@ -158,10 +158,27 @@ void spawnBlock(){
   }
 }
 
+void move_player_y(FixedPoint<8, 8> move_val)
+{
+  y_pos += move_val;
+  
+  if (y_pos > 239)
+  {
+    if (move_val > 0)
+    {
+      y_pos -= 240;
+    }
+    else
+    {
+      y_pos -= 16;
+    }
+  }
+}
+
 
 void run_game(){
-  x_pos = 124.0_u12_4;
-  y_pos = 208.0_u12_4;
+  x_pos = 124.0_u8_8;
+  y_pos = 208.0_u8_8;
   // x_pos = 5.588;
   x_vel = 0;
   y_vel = 0;
@@ -386,23 +403,23 @@ void player_movement()
     {
       if (pad & PAD_LEFT)
       {
-        x_vel -= 0.25_12_4;
+        x_vel -= 0.25_8_8;
         player_dir = 64;
       }
       else if (pad & PAD_RIGHT)
       {
-        x_vel += 0.25_12_4;
+        x_vel += 0.25_8_8;
         player_dir = 0;
       }
 
       else if (x_vel > 0)
       {
-        x_vel -= 0.25_12_4;
+        x_vel -= 0.25_8_8;
       }
 
       else if (x_vel < 0)
       {
-        x_vel += 0.25_12_4;
+        x_vel += 0.25_8_8;
       }
 
       if (on_ground)
@@ -413,7 +430,7 @@ void player_movement()
           {
             on_ground = 0;
             jumped = 1;
-            y_vel = -7.0_12_4;
+            y_vel = -7.0_8_8;
           }
         }
         else
@@ -424,16 +441,16 @@ void player_movement()
     }
 
     //Gravity
-    if (y_vel < 5.0_12_4)
+    if (y_vel < 5.0_8_8)
     {
-      y_vel += pad & PAD_A ? 0.25_12_4 : 0.75_12_4;
+      y_vel += pad & PAD_A ? 0.25_8_8 : 0.75_8_8;
     }
     else
     {
-      y_vel = 5.0_12_4;
+      y_vel = 5.0_8_8;
     }
 
-    FixedPoint<12, 4> max_speed = pad & PAD_B ? 3.0_12_4 : 2.0_12_4;
+    FixedPoint<8, 8> max_speed = pad & PAD_B ? 3.0_8_8 : 2.0_8_8;
 
     //Cap Velocity
     if (x_vel > max_speed)
@@ -477,14 +494,14 @@ void player_movement()
     }
 
 
-    y_pos += y_vel;
-    //y_pos %= 240.0_u12_4;
+    move_player_y(y_vel);
+    //y_pos %= 240.0_u8_8;
 
     bg_collision();
     if (collision)
     {
-      y_pos -= eject_y;
-      //y_pos %= 240.0_u12_4;
+      move_player_y(-eject_y);
+      //y_pos %= 240.0_u8_8;
       y_pos.set_f(12);
       y_vel = 0;
     }
@@ -499,7 +516,7 @@ void block_movement(Block* block){
       block->shouldExist=false;
       c_map[(block->col) + (columns[block->col]) + 3] = 1;
       columns[block->col] -= 16;
-      if(columns[block->col]>=240){ //207%16 DO NOT FORGET
+      if(columns[block->col]==15){ //207%16 DO NOT FORGET
         columns[block->col] -= 16;
       }
       col_to_change = block->col;
@@ -521,9 +538,9 @@ void block_movement(Block* block){
 
       if (collision)
       {
-        y_pos -= eject_y;
+        move_player_y(-eject_y);
         y_pos.set_f(12);
-        y_vel = 4.25_12_4;
+        y_vel = 4.25_8_8;
       }
     }
   }
