@@ -555,6 +555,11 @@ void bg_collision()
     return;
   }
 
+  if (down >= 0xf0)
+  {
+    down -= 240;
+  }
+
   if (c_map[(left >> 4) + (up & 0xf0)])
   {
     ++collision;
