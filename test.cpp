@@ -550,11 +550,6 @@ void bg_collision()
   uint8_t right = left + 7;
   uint8_t down = up + 15;
 
-  if (up >= 0xf0)
-  {
-    return;
-  }
-
   if (down >= 0xf0)
   {
     down -= 240;
@@ -606,6 +601,11 @@ void block_collision(Block* block)
   uint8_t up = y_pos.as_i();
   uint8_t right = left + 7;
   uint8_t down = up + 15;
+
+  if (down >= 0xf0)
+  {
+    down -= 240;
+  }
 
   if ((left >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
   {
