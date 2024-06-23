@@ -105,20 +105,12 @@ constexpr uint8_t block_sprite[9] =
   128
 };
 
-uint8_t columns[12] = {
-  207,207,207,207,207,207,
-  207,207,207,207,207,207
-};
+uint8_t columns[12];
 // uint8_t columns_old[12] = {
 //   206,206,206,206,206,206,
 //   206,206,206,206,206,206
 // };
-uint8_t cols_to_change[16] = {
-  12, 12, 12, 12,
-  12, 12, 12, 12,
-  12, 12, 12, 12,
-  12, 12, 12, 12,
-};
+uint8_t cols_to_change[16];
 
 constexpr uint8_t blank_row[24] = {
     0,0,0,0,0,0,
@@ -203,7 +195,7 @@ void run_game(){
     blocks[i]=Block();
   }
   for(uint8_t i = 0; i < 12; i++){
-    columns[i] = 207;
+    columns[i] = 208;
   }
   //   vram_adr(NTADR_A(0,0));
   // vram_fill(0,128);
@@ -326,8 +318,8 @@ void run_game(){
           };
           uint16_t ppuaddr1, ppuaddr2;
           // if(columns[cols_to_change[i]] < 32){
-            ppuaddr1 = NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
-            ppuaddr2 = NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
+            ppuaddr1 = NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 2);
+            ppuaddr2 = NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 2);
           // }else{
           //   ppuaddr1 = NTADR_B((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
           //   ppuaddr2 = NTADR_B((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
@@ -514,10 +506,10 @@ void block_movement(Block* block){
     block->ypos%=240;
     if(block->ypos >> 2 ==(columns[block->col] >> 2)+1){
       block->shouldExist=false;
-      c_map[(block->col) + (columns[block->col]) + 3] = 1;
+      c_map[(block->col) + (columns[block->col]) + 2] = 1;
       columns[block->col] -= 16;
-      if(columns[block->col]<16){ //207%16 DO NOT FORGET
-        columns[block->col] = 207;
+      if(columns[block->col]==240){ //207%16 DO NOT FORGET
+        columns[block->col] = 224;
       }
       col_to_change = block->col;
       for(uint8_t i = 0; i < 16; i++){
