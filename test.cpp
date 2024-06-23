@@ -45,6 +45,8 @@ uint8_t floor_collision;
 int8_t eject_x;
 int8_t eject_y;
 
+uint8_t pad;
+
 void player_movement();
 void block_movement(Block* block);
 void bg_collision();
@@ -245,6 +247,7 @@ void run_game(){
 
   while (!player_dead)
   {
+    pad = pad_poll(0);
     ppu_wait_nmi();
     update_pause();
     if(!paused)
@@ -385,7 +388,6 @@ int main(void)
 }
 
 void update_pause(){
-  uint8_t pad = pad_poll(0);
   if(!paused_down){
     paused = (paused ^ (pad & PAD_SELECT));
   }
@@ -395,8 +397,6 @@ void update_pause(){
 void player_movement()
 {
     //Player Input
-    char pad = pad_poll(0);
-
     pad_sum += pad;
     
     if(!player_dead)
@@ -516,8 +516,8 @@ void block_movement(Block* block){
       block->shouldExist=false;
       c_map[(block->col) + (columns[block->col]) + 3] = 1;
       columns[block->col] -= 16;
-      if(columns[block->col]==15){ //207%16 DO NOT FORGET
-        columns[block->col] -= 16;
+      if(columns[block->col]<16){ //207%16 DO NOT FORGET
+        columns[block->col] = 207;
       }
       col_to_change = block->col;
       for(uint8_t i = 0; i < 16; i++){
