@@ -316,20 +316,20 @@ void run_game(){
           uint8_t tiles[2] = {
             2,3
           };
-          uint16_t ppuaddr1, ppuaddr2;
-          // if(columns[cols_to_change[i]] < 32){
-            ppuaddr1 = NTADR_A((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 2);
-            ppuaddr2 = NTADR_A((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 2);
-          // }else{
-          //   ppuaddr1 = NTADR_B((cols_to_change[i] << 1) + 4, (columns[cols_to_change[i]] >> 3) + 3);
-          //   ppuaddr2 = NTADR_B((cols_to_change[i] << 1) + 5, (columns[cols_to_change[i]] >> 3) + 3);
-          // }
+
+          uint8_t tile_y = (columns[cols_to_change[i]] >> 3) + 2;
+
+          if (tile_y == 30)
+          {
+            tile_y = 0;
+          }
+
           multi_vram_buffer_vert(tiles, sizeof(tiles),
-                              ppuaddr1);
+                              NTADR_A((cols_to_change[i] << 1) + 4, tile_y));
           tiles[0] = 4;
           tiles[1] = 5;
           multi_vram_buffer_vert(tiles, sizeof(tiles),
-                        ppuaddr2);
+                        NTADR_A((cols_to_change[i] << 1) + 5, tile_y));
           cols_to_change[i] = 12;
       }
       oam_clear();
