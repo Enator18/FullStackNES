@@ -504,7 +504,7 @@ void block_movement(Block* block){
   if(block->shouldExist){
     block->ypos+=4;
     block->ypos%=240;
-    if(block->ypos >> 2 ==(columns[block->col] >> 2)+1){
+    if(block->ypos >> 2 ==(columns[block->col] >> 2)){
       block->shouldExist=false;
       c_map[(block->col) + (columns[block->col]) + 2] = 1;
       columns[block->col] -= 16;
