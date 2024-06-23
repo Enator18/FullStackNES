@@ -312,7 +312,7 @@ void run_game(){
 
       if (squished)
       {
-        // player_dead = true;
+        player_dead = true;
       }
 
       //hardware hell
@@ -540,6 +540,16 @@ void block_movement(Block* block){
         move_player_y(-eject_y);
         y_pos.set_f(12);
         y_vel = 4.25_8_8;
+
+        if (!squished)
+        {
+          bg_collision();
+
+          if (collision)
+          {
+            squished = true;
+          }
+        }
       }
     }
   }
