@@ -267,6 +267,16 @@ void run_game(){
               for (uint8_t i = 0; i < 12; i++)
               {
                 c_map[i + (y_scroll & 0x00f0) + 2] = 0;
+
+                if (columns[i] == (y_scroll & 0x00f0))
+                {
+                  columns[i] -= 16;
+
+                  if(columns[i]==240)
+                  {
+                    columns[i] = 224;
+                  }
+                }
               }
             }
           }
