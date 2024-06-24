@@ -282,7 +282,7 @@ void run_game(){
       else
       {
         scroll_wait++;
-        if (scroll_wait > 864)
+        if (scroll_wait > 648)
         {
           scrolling = 1;
         }
