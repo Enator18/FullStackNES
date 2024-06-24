@@ -177,7 +177,7 @@ void spawnEnemy(){
     col = rand8()%12;
   // }while(columnOk(col));
   enemy.x_pos = (col + 2) << 4;
-  enemy.y_pos = (uint8_t)(y_scroll&255);
+  enemy.y_pos = (uint8_t)(y_scroll&255)+16;
   enemy.squished = false;
 }
 
@@ -572,11 +572,15 @@ void enemy_movement()
     if(true)
     {
     if(x_pos < enemy.x_pos){
+      if(enemy.onBlock|enemy.jumping){
       enemy.x_vel -= 0.25_8_8;
       enemy.dir = 64;
+      }
     }else{
+      if(enemy.onBlock|enemy.jumping){
       enemy.x_vel += 0.25_8_8;
       enemy.dir = 0;
+      }
     }
 
       if (enemy.onBlock)
