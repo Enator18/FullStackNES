@@ -149,7 +149,7 @@ void spawnBlock(){
   new_block.shouldExist = true;
   for(uint8_t i = 0; i < 16; i++){ // Magic Number: 16 Length of Blocks
     if(!blocks[i].shouldExist){
-      new_block.ypos = (uint8_t)(y_scroll&255);
+      new_block.ypos = (uint8_t)(y_scroll&255) + 12;
       blocks[i] = new_block;
       break;
     }
@@ -183,7 +183,7 @@ void run_game(){
   scroll_wait = 0;
   scrolling = 0;
   y_scroll = 0;
-  set_scroll_y(y_scroll);
+  set_scroll_y(0);
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
   y_scroll = 0;
@@ -247,12 +247,11 @@ void run_game(){
     set_scroll_x(256);
     set_scroll_y(0);
 
-    ppu_wait_nmi();
-
-    oam_clear();
     oam_spr(127, 14, 0x03, 0x01);
 
-    //xy_split(0, y_scroll);
+    ppu_wait_nmi();
+
+    xy_split(0, y_scroll);
 
     pad = pad_poll(0);
 
@@ -352,6 +351,7 @@ void run_game(){
                         NTADR_A((cols_to_change[i] << 1) + 5, tile_y));
           cols_to_change[i] = 12;
       }
+      oam_clear();
 
       oam_spr(x_pos.as_i(), y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > y_pos.as_i()) << 4), 0x01, player_dir);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
