@@ -246,13 +246,15 @@ void run_game(){
   {
     set_scroll_x(256);
     set_scroll_y(0);
-    oam_spr(127, 14, 0x03, 0x01);
 
     ppu_wait_nmi();
 
-    pad = pad_poll(0);
+    oam_clear();
+    oam_spr(127, 14, 0x03, 0x01);
 
     xy_split(0, y_scroll);
+
+    pad = pad_poll(0);
 
     update_pause();
     if(!paused)
@@ -352,7 +354,6 @@ void run_game(){
                         NTADR_A((cols_to_change[i] << 1) + 5, tile_y));
           cols_to_change[i] = 12;
       }
-      oam_clear();
 
       oam_spr(x_pos.as_i(), y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > y_pos.as_i()) << 4), 0x01, player_dir);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
