@@ -385,6 +385,7 @@ void run_game(){
       oam_clear();
 
       oam_spr(x_pos.as_i(), y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > y_pos.as_i()) << 4), 0x01, player_dir);
+      if(!enemy.squished)
       oam_spr(enemy.x_pos.as_i(), enemy.y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > enemy.y_pos.as_i()) << 4), 0x01, enemy.dir|2);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
         if(blocks[i].shouldExist){
@@ -638,13 +639,7 @@ void enemy_movement()
         }
       }
 
-      // 3. KILL
-      if(enemy.x_pos < x_pos + 8 & enemy.x_pos > x_pos &
-        enemy.y_pos < y_pos + 16 & enemy.y_pos > y_pos
-      ){
-        player_dead = true;
-      }
-    }
+
 
 
     move_enemy_y(enemy.y_vel);
@@ -655,6 +650,36 @@ void enemy_movement()
       move_enemy_y(-enemy.eject_y);
       enemy.y_pos.set_f(12);
       enemy.y_vel = 0;
+    }
+
+      // 3. KILL
+      uint8_t enemy_top = enemy.y_pos.as_i();
+      uint8_t enemy_left = enemy.x_pos.as_i();
+      uint8_t enemy_bottom = enemy_top + 16;
+      uint8_t enemy_right = enemy_left + 8;
+      uint8_t player_left = x_pos.as_i();
+      uint8_t player_top = y_pos.as_i();
+      uint8_t player_right = player_left + 8;
+      uint8_t player_bottom = player_top + 16;
+      if(enemy_top > player_top & enemy_top < player_bottom){
+        // our top line is between the player's top and bottom lines
+        if(enemy_left > player_left & enemy_left < player_right){
+          // our left line is between the player's left and right lines
+          player_dead = true;
+        }else if(enemy_right < player_right & enemy_right > player_left){
+          // our right line is between the player's left and right lines
+          player_dead = true;
+        }
+      }else if(enemy_bottom > player_top & enemy_bottom < player_bottom){
+        // our bottom line is between the player's top and bottom lines
+        if(enemy_left > player_left & enemy_left < player_right){
+          // our left line is between the player's left and right lines
+          player_dead = true;
+        }else if(enemy_right < player_right & enemy_right > player_left){
+          // our right line is between the player's left and right lines
+          player_dead = true;
+        }
+      }
     }
 }
 
