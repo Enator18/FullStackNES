@@ -252,7 +252,7 @@ void run_game(){
     oam_clear();
     oam_spr(127, 14, 0x03, 0x01);
 
-    xy_split(0, y_scroll);
+    //xy_split(0, y_scroll);
 
     pad = pad_poll(0);
 
@@ -268,8 +268,6 @@ void run_game(){
         if (scroll_timer >= 18)
         {
           y_scroll = sub_scroll_y(1, y_scroll);
-
-          //set_scroll_y(y_scroll);
 
           scroll_timer = 0;
           if (!(y_scroll & 0x0f))
