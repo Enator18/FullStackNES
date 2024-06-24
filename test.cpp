@@ -36,14 +36,14 @@ typedef struct Block {
 } Block;
 
 typedef struct Enemy {
-  FixedPoint<8, 8, false> y_pos = 144;
-  FixedPoint<8, 8, false> x_pos = 0;
+  FixedPoint<8, 8, false> y_pos = 32;
+  FixedPoint<8, 8, false> x_pos = 180;
   FixedPoint<8, 8> y_vel = 0;
   FixedPoint<8, 8> x_vel = 0;
   uint8_t jumping = 0;
   uint8_t onBlock = 0;
   uint8_t collision = 0;
-  uint8_t squished = 0;
+  uint8_t squished = true;
   uint8_t eject_x = 0;
   uint8_t eject_y = 0;
   uint8_t dir = 0;
@@ -169,6 +169,16 @@ void spawnBlock(){
       break;
     }
   }
+}
+
+void spawnEnemy(){
+  uint8_t col = 12;
+  // do{
+    col = rand8()%12;
+  // }while(columnOk(col));
+  enemy.x_pos = (col + 2) << 4;
+  enemy.y_pos = (uint8_t)(y_scroll&255);
+  enemy.squished = false;
 }
 
 void move_player_y(FixedPoint<8, 8> move_val)
@@ -328,7 +338,11 @@ void run_game(){
       frames_since_last_spawn++;
       
       if(frames_since_last_spawn>=24){
+        if((enemy.squished)&(rand8()>200)){
+          spawnEnemy();
+        }else{
         spawnBlock();
+        }
         frames_since_last_spawn = 0;
       }
       // *sq1_pitch_low = rand8();
@@ -661,7 +675,7 @@ void enemy_movement()
       uint8_t player_top = y_pos.as_i();
       uint8_t player_right = player_left + 8;
       uint8_t player_bottom = player_top + 16;
-      if(enemy_top > player_top & enemy_top < player_bottom){
+      if(enemy_top >= player_top & enemy_top <= player_bottom){
         // our top line is between the player's top and bottom lines
         if(enemy_left > player_left & enemy_left < player_right){
           // our left line is between the player's left and right lines
@@ -670,7 +684,7 @@ void enemy_movement()
           // our right line is between the player's left and right lines
           player_dead = true;
         }
-      }else if(enemy_bottom > player_top & enemy_bottom < player_bottom){
+      }else if(enemy_bottom >= player_top & enemy_bottom <= player_bottom){
         // our bottom line is between the player's top and bottom lines
         if(enemy_left > player_left & enemy_left < player_right){
           // our left line is between the player's left and right lines
@@ -728,7 +742,7 @@ void block_movement(Block* block){
           }
         }
       }
-
+      if(!enemy.squished){
       block_collision_enemy(block);
 
       if (enemy.collision)
@@ -746,6 +760,7 @@ void block_movement(Block* block){
             enemy.squished = 1;
           }
         }
+      }
       }
     }
   }
@@ -950,7 +965,7 @@ void block_collision_enemy(Block* block)
 
     if (enemy.onBlock)
     {
-      ++enemy.squished;
+      ++(enemy.squished);
     }
   }
 
