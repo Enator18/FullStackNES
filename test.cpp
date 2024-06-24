@@ -585,7 +585,7 @@ void enemy_movement()
 
       if (enemy.onBlock)
       {
-        if (y_pos < enemy.y_pos)
+        if ((enemy.y_pos - 1 - y_pos) < 220)
         {
           if (!enemy.jumping)
           {
