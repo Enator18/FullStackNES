@@ -35,6 +35,22 @@ typedef struct Block {
   bool shouldExist = false;
 } Block;
 
+typedef struct Enemy {
+  FixedPoint<8, 8, false> y_pos = 144;
+  FixedPoint<8, 8, false> x_pos = 0;
+  FixedPoint<8, 8> y_vel = 0;
+  FixedPoint<8, 8> x_vel = 0;
+  uint8_t jumping = 0;
+  uint8_t onBlock = 0;
+  uint8_t collision = 0;
+  uint8_t squished = 0;
+  uint8_t eject_x = 0;
+  uint8_t eject_y = 0;
+  uint8_t dir = 0;
+} Enemy;
+
+Enemy enemy;
+
 void write_to_collisions(Block block);
 
 uint8_t jumped;
@@ -48,9 +64,12 @@ int8_t eject_y;
 uint8_t pad;
 
 void player_movement();
+void enemy_movement();
 void block_movement(Block* block);
 void bg_collision();
+void bg_collision_enemy();
 void block_collision(Block* block);
+void block_collision_enemy(Block* block);
 void update_pause();
 
 FixedPoint<8, 8, false> x_pos = 0;
@@ -169,6 +188,23 @@ void move_player_y(FixedPoint<8, 8> move_val)
   }
 }
 
+void move_enemy_y(FixedPoint<8, 8> move_val)
+{
+  enemy.y_pos += move_val;
+  
+  if (enemy.y_pos > 239)
+  {
+    if (move_val > 0)
+    {
+      enemy.y_pos -= 240;
+    }
+    else
+    {
+      enemy.y_pos -= 16;
+    }
+  }
+}
+
 
 void run_game(){
   x_pos = 124.0_u8_8;
@@ -182,6 +218,7 @@ void run_game(){
   set_scroll_y(y_scroll);
   frames_since_last_spawn = 200; // a nice value. Anything over 25 (the number of frames between spawns) works
   player_dead = false;
+  enemy = Enemy();
   y_scroll = 0;
   for(uint8_t i = 0; i < 224; i++){
     c_map[i] = 1 - (((i%16)>1)&((i%16)<14));
@@ -303,6 +340,12 @@ void run_game(){
       player_movement();
 
       squished = 0;
+
+      //move guys
+      if(!enemy.squished){
+      enemy_movement();
+      }
+
       //move stuff
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: Length of blocks
         if(blocks[i].shouldExist){
@@ -342,6 +385,7 @@ void run_game(){
       oam_clear();
 
       oam_spr(x_pos.as_i(), y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > y_pos.as_i()) << 4), 0x01, player_dir);
+      oam_spr(enemy.x_pos.as_i(), enemy.y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > enemy.y_pos.as_i()) << 4), 0x01, enemy.dir|2);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
         if(blocks[i].shouldExist){
           oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - (y_scroll&255) - (((y_scroll&255) > blocks[i].ypos) << 4), block_sprite);
@@ -506,6 +550,114 @@ void player_movement()
     }
 }
 
+void enemy_movement()
+{
+    // 1. Move
+    
+    if(true)
+    {
+    if(x_pos < enemy.x_pos){
+      enemy.x_vel -= 0.25_8_8;
+      enemy.dir = 64;
+    }else{
+      enemy.x_vel += 0.25_8_8;
+      enemy.dir = 0;
+    }
+
+      if (enemy.onBlock)
+      {
+        if (y_pos < enemy.y_pos)
+        {
+          if (!enemy.jumping)
+          {
+            enemy.onBlock = 0;
+            enemy.jumping = 1;
+            enemy.y_vel = -5.0_8_8;
+          }
+        }
+        else
+        {
+          enemy.jumping = 0;
+        }
+      }else{
+        enemy.jumping = 0;
+      }
+    }
+
+    //2. Physics
+
+    if (enemy.y_vel < 5.0_8_8)
+    {
+      enemy.y_vel += 0.25_8_8;
+    }
+    else
+    {
+      enemy.y_vel = 5.0_8_8;
+    }
+
+    FixedPoint<8, 8> max_speed = 1.0_8_8;
+
+    //Cap Velocity
+    if (enemy.x_vel > max_speed)
+    {
+      enemy.x_vel = max_speed;
+    }
+
+    if (enemy.x_vel < -max_speed)
+    {
+      enemy.x_vel = -max_speed;
+    }
+
+    //Move with Collisions
+    enemy.x_pos += enemy.x_vel;
+
+    bg_collision_enemy(); //TODO make version of this for enemy
+
+    if (enemy.collision)
+    {
+      enemy.x_pos -= enemy.eject_x;
+      enemy.x_pos.set_f(0);
+      enemy.x_vel = 0;
+    }
+
+    else
+    {
+      for (uint8_t i = 0; i < 16; i++)
+      {
+        if (blocks[i].shouldExist)
+        {
+          block_collision_enemy(&blocks[i]);
+          if (enemy.collision)
+          {
+            enemy.x_pos -= enemy.eject_x;
+            enemy.x_pos.set_f(0);
+            enemy.x_vel = 0;
+
+            break;
+          }
+        }
+      }
+
+      // 3. KILL
+      if(enemy.x_pos < x_pos + 8 & enemy.x_pos > x_pos &
+        enemy.y_pos < y_pos + 16 & enemy.y_pos > y_pos
+      ){
+        player_dead = true;
+      }
+    }
+
+
+    move_enemy_y(enemy.y_vel);
+
+    bg_collision_enemy();
+    if (enemy.collision)
+    {
+      move_enemy_y(-enemy.eject_y);
+      enemy.y_pos.set_f(12);
+      enemy.y_vel = 0;
+    }
+}
+
 void block_movement(Block* block){
   uint8_t col_to_change = 12;
   if(block->shouldExist){
@@ -548,6 +700,25 @@ void block_movement(Block* block){
           if (collision)
           {
             squished = true;
+          }
+        }
+      }
+
+      block_collision_enemy(block);
+
+      if (enemy.collision)
+      {
+        move_enemy_y(-enemy.eject_y);
+        enemy.y_pos.set_f(12);
+        enemy.y_vel = 4.25_8_8;
+
+        if (!enemy.squished)
+        {
+          bg_collision_enemy();
+
+          if (enemy.collision)
+          {
+            enemy.squished = 1;
           }
         }
       }
@@ -608,6 +779,59 @@ void bg_collision()
   }
 }
 
+void bg_collision_enemy()
+{
+  enemy.collision = 0;
+  enemy.onBlock = 0;
+  enemy.eject_x = 0;
+  enemy.eject_y = 0;
+
+  uint8_t left = enemy.x_pos.as_i();
+  uint8_t up = enemy.y_pos.as_i();
+  uint8_t right = left + 7;
+  uint8_t down = up + 15;
+
+  if (down >= 0xf0)
+  {
+    down -= 240;
+  }
+
+  if (c_map[(left >> 4) + (up & 0xf0)])
+  {
+    ++(enemy.collision);
+    enemy.eject_x = (left & 0x0f) - 16;
+    enemy.eject_y = (up & 0x0f) - 16;
+  }
+
+  if (c_map[(right >> 4) + (up & 0xf0)])
+  {
+    ++(enemy.collision);
+    enemy.eject_x = (right & 0x0f) + 1;
+    enemy.eject_y = (up & 0x0f) - 16;
+  }
+
+  if (down >= 0xf0)
+  {
+    return;
+  }
+
+  if (c_map[(left >> 4) + (down & 0xf0)])
+  {
+    ++(enemy.collision);
+    ++(enemy.onBlock);
+    enemy.eject_x = (left & 0x0f) - 16;
+    enemy.eject_y = (down & 0x0f) + 1;
+  }
+
+  if (c_map[(right >> 4) + (down & 0xf0)])
+  {
+    ++(enemy.collision);
+    ++(enemy.onBlock);
+    enemy.eject_x = (right & 0x0f) + 1;
+    enemy.eject_y = (down & 0x0f) + 1;
+  }
+}
+
 void block_collision(Block* block)
 {
   collision = 0;
@@ -662,5 +886,62 @@ void block_collision(Block* block)
     ++collision;
     eject_x = right - block->xpos + 1;
     eject_y = down - block->ypos + 1;
+  }
+}
+
+void block_collision_enemy(Block* block)
+{
+  enemy.collision = 0;
+  enemy.eject_x = 0;
+  enemy.eject_y = 0;
+
+  uint8_t left = enemy.x_pos.as_i();
+  uint8_t up = enemy.y_pos.as_i();
+  uint8_t right = left + 7;
+  uint8_t down = up + 15;
+
+  if (down >= 0xf0)
+  {
+    down -= 240;
+  }
+
+  if ((left >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
+  {
+    ++(enemy.collision);
+    enemy.eject_x = left - block->xpos - 16;
+    enemy.eject_y = up - block->ypos - 16;
+
+    if ((enemy.onBlock))
+    {
+      ++(enemy.squished);
+    }
+  }
+
+  if ((right >> 4) - 2 == block->col && up > block->ypos && up < block->ypos + 16)
+  {
+    ++(enemy.collision);
+    enemy.eject_x = right - block->xpos + 1;
+    enemy.eject_y = up - block->ypos - 16;
+
+    if (enemy.onBlock)
+    {
+      ++enemy.squished;
+    }
+  }
+
+  if ((left >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
+  {
+    ++enemy.onBlock;
+    ++enemy.collision;
+    enemy.eject_x = left - block->xpos - 16;
+    enemy.eject_y = down - block->ypos + 1;
+  }
+
+  if ((right >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
+  {
+    ++enemy.onBlock;
+    ++enemy.collision;
+    enemy.eject_x = right - block->xpos + 1;
+    enemy.eject_y = down - block->ypos + 1;
   }
 }
