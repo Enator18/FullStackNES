@@ -111,6 +111,10 @@ uint8_t columns[12];
 //   206,206,206,206,206,206
 // };
 uint8_t cols_to_change[16];
+constexpr uint8_t statusbar_row_temp[32] =
+{
+  6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6
+};
 
 constexpr uint8_t blank_row[24] = {
     0,0,0,0,0,0,
@@ -228,10 +232,11 @@ void run_game(){
     3,5,
   };
   set_vram_buffer();
-  multi_vram_buffer_horz(top_row, sizeof(top_row),
-                    NTADR_A(4, 28));
-  multi_vram_buffer_horz(bottom_row, sizeof(bottom_row),
-                    NTADR_A(4, 29));
+  multi_vram_buffer_horz(top_row, sizeof(top_row), NTADR_A(4, 28));
+  multi_vram_buffer_horz(bottom_row, sizeof(bottom_row), NTADR_A(4, 29));
+  ppu_wait_nmi();
+  multi_vram_buffer_horz(statusbar_row_temp, sizeof(statusbar_row_temp), NTADR_B(0, 0));
+  multi_vram_buffer_horz(statusbar_row_temp, sizeof(statusbar_row_temp), NTADR_B(0, 1));
   while(!((pad_poll(0)&PAD_START))){
     ppu_wait_nmi();
   }
@@ -239,8 +244,16 @@ void run_game(){
 
   while (!player_dead)
   {
-    pad = pad_poll(0);
+    set_scroll_x(256);
+    set_scroll_y(0);
+    oam_spr(127, 14, 0x03, 0x01);
+
     ppu_wait_nmi();
+
+    pad = pad_poll(0);
+
+    xy_split(0, y_scroll);
+
     update_pause();
     if(!paused)
     {
@@ -254,7 +267,7 @@ void run_game(){
         {
           y_scroll = sub_scroll_y(1, y_scroll);
 
-          set_scroll_y(y_scroll);
+          //set_scroll_y(y_scroll);
 
           scroll_timer = 0;
           if (!(y_scroll & 0x0f))
