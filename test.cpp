@@ -20,6 +20,7 @@ bool player_dead = false;
 uint8_t paused = 0;
 uint8_t paused_down = 0;
 
+
 uint8_t pad_sum;
 
 uint8_t random(){
@@ -41,7 +42,7 @@ typedef struct Enemy {
   FixedPoint<8, 8> y_vel = 0;
   FixedPoint<8, 8> x_vel = 0;
   uint8_t jumping = 0;
-  uint8_t onBlock = 0;
+  uint8_t on_ground = 0;
   uint8_t collision = 0;
   uint8_t squished = true;
   uint8_t eject_x = 0;
@@ -60,7 +61,6 @@ uint8_t floor_collision;
 
 int8_t eject_x;
 int8_t eject_y;
-
 uint8_t pad;
 
 void player_movement();
@@ -173,9 +173,9 @@ void spawnBlock(){
 
 void spawnEnemy(){
   uint8_t col = 12;
-  // do{
+  do{
     col = rand8()%12;
-  // }while(columnOk(col));
+  }while(!columnOk(col));
   enemy.x_pos = (col + 2) << 4;
   enemy.y_pos = (uint8_t)(y_scroll&255)+16;
   enemy.squished = false;
@@ -336,9 +336,8 @@ void run_game(){
       }
 
       frames_since_last_spawn++;
-      
       if(frames_since_last_spawn>=24){
-        if((enemy.squished)&(rand8()%5==0)){
+        if((enemy.squished)&&(random()%5==0)){
           spawnEnemy();
         }else{
         spawnBlock();
@@ -571,31 +570,32 @@ void enemy_movement()
     if(true)
     {
     if(x_pos < enemy.x_pos){
-      if(enemy.onBlock|enemy.jumping){
+      if(enemy.on_ground||enemy.jumping){
       enemy.x_vel -= 0.25_8_8;
       enemy.dir = 64;
       }
     }else{
-      if(enemy.onBlock|enemy.jumping){
+      if(enemy.on_ground||enemy.jumping){
       enemy.x_vel += 0.25_8_8;
       enemy.dir = 0;
       }
     }
 
-      if (enemy.onBlock)
+      if (enemy.on_ground)
       {
-        if ((enemy.y_pos - 1 - y_pos) < 220)
+        if ((uint8_t)(enemy.y_pos.as_i() - y_pos.as_i() - 1) < 240)
         {
           if (!enemy.jumping)
           {
-            enemy.onBlock = 0;
-            enemy.jumping = 1;
+            enemy.on_ground = 0;
+            enemy.jumping = 0xBC;
             enemy.y_vel = -5.0_8_8;
           }
-        }
-        else
-        {
-          enemy.jumping = 0;
+        // }
+          else
+          {
+            enemy.jumping = 0;
+          }
         }
       }else{
         enemy.jumping = 0;
@@ -665,7 +665,7 @@ void enemy_movement()
     if (enemy.collision)
     {
       move_enemy_y(-enemy.eject_y);
-      enemy.y_pos.set_f(12);
+      enemy.y_pos.set_f(0);
       enemy.y_vel = 0;
     }
 
@@ -699,7 +699,7 @@ void enemy_movement()
       // }
       int8_t xdiff = (x_pos.as_i()-enemy.x_pos.as_i());
       int8_t ydiff = (y_pos.as_i()-enemy.y_pos.as_i());
-      if((xdiff<6&&xdiff>-6) & (ydiff<=16&&ydiff>=-16)){
+      if((xdiff<6&&xdiff>-6) && (ydiff<=16&&ydiff>=-16)){
         player_dead = true;
       }
     }
@@ -756,7 +756,7 @@ void block_movement(Block* block){
       if (enemy.collision)
       {
         move_enemy_y(-enemy.eject_y);
-        enemy.y_pos.set_f(12);
+        enemy.y_pos.set_f(0);
         enemy.y_vel = 4.25_8_8;
 
         if (!enemy.squished)
@@ -830,7 +830,7 @@ void bg_collision()
 void bg_collision_enemy()
 {
   enemy.collision = 0;
-  enemy.onBlock = 0;
+  enemy.on_ground = 0;
   enemy.eject_x = 0;
   enemy.eject_y = 0;
 
@@ -846,14 +846,16 @@ void bg_collision_enemy()
 
   if (c_map[(left >> 4) + (up & 0xf0)])
   {
-    ++(enemy.collision);
+    // ++(enemy.collision);
+    enemy.collision = 0x12;
     enemy.eject_x = (left & 0x0f) - 16;
     enemy.eject_y = (up & 0x0f) - 16;
   }
 
   if (c_map[(right >> 4) + (up & 0xf0)])
   {
-    ++(enemy.collision);
+    // ++(enemy.collision);
+    enemy.collision = 0x13;
     enemy.eject_x = (right & 0x0f) + 1;
     enemy.eject_y = (up & 0x0f) - 16;
   }
@@ -865,16 +867,20 @@ void bg_collision_enemy()
 
   if (c_map[(left >> 4) + (down & 0xf0)])
   {
-    ++(enemy.collision);
-    ++(enemy.onBlock);
+    // ++(enemy.collision);
+    enemy.collision = 0x14;
+    // ++(enemy.on_ground);
+    enemy.on_ground = 0xAB;
     enemy.eject_x = (left & 0x0f) - 16;
     enemy.eject_y = (down & 0x0f) + 1;
   }
 
   if (c_map[(right >> 4) + (down & 0xf0)])
   {
-    ++(enemy.collision);
-    ++(enemy.onBlock);
+    // ++(enemy.collision);
+    enemy.collision = 0x15;
+    // ++(enemy.on_ground);
+    enemy.on_ground = 0xAB;
     enemy.eject_x = (right & 0x0f) + 1;
     enemy.eject_y = (down & 0x0f) + 1;
   }
@@ -959,7 +965,7 @@ void block_collision_enemy(Block* block)
     enemy.eject_x = left - block->xpos - 16;
     enemy.eject_y = up - block->ypos - 16;
 
-    if ((enemy.onBlock))
+    if ((enemy.on_ground))
     {
       ++(enemy.squished);
     }
@@ -971,7 +977,7 @@ void block_collision_enemy(Block* block)
     enemy.eject_x = right - block->xpos + 1;
     enemy.eject_y = up - block->ypos - 16;
 
-    if (enemy.onBlock)
+    if (enemy.on_ground)
     {
       ++(enemy.squished);
     }
@@ -979,7 +985,7 @@ void block_collision_enemy(Block* block)
 
   if ((left >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
   {
-    ++enemy.onBlock;
+    ++enemy.on_ground;
     ++enemy.collision;
     enemy.eject_x = left - block->xpos - 16;
     enemy.eject_y = down - block->ypos + 1;
@@ -987,7 +993,7 @@ void block_collision_enemy(Block* block)
 
   if ((right >> 4) - 2 == block->col && down > block->ypos && down < block->ypos + 16)
   {
-    ++enemy.onBlock;
+    ++enemy.on_ground;
     ++enemy.collision;
     enemy.eject_x = right - block->xpos + 1;
     enemy.eject_y = down - block->ypos + 1;
