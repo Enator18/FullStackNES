@@ -665,7 +665,7 @@ void enemy_movement()
     if (enemy.collision)
     {
       move_enemy_y(-enemy.eject_y);
-      enemy.y_pos.set_f(0);
+      enemy.y_pos.set_f(12);
       enemy.y_vel = 0;
     }
 
@@ -756,7 +756,7 @@ void block_movement(Block* block){
       if (enemy.collision)
       {
         move_enemy_y(-enemy.eject_y);
-        enemy.y_pos.set_f(0);
+        enemy.y_pos.set_f(12);
         enemy.y_vel = 4.25_8_8;
 
         if (!enemy.squished)
