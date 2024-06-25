@@ -558,7 +558,7 @@ void player_movement()
     {
       move_player_y(-eject_y);
       //y_pos %= 240.0_u8_8;
-      y_pos.set_f(12);
+      y_pos.set_f(192);
       y_vel = 0;
     }
 }
@@ -653,6 +653,15 @@ void enemy_movement()
 
             break;
           }
+          block_collision_enemy(&blocks[i]);
+          if (enemy.collision)
+          {
+            move_enemy_y(-enemy.eject_y);
+            enemy.x_pos.set_f(192);
+            enemy.x_vel = 0;
+
+            break;
+          }
         }
       }
 
@@ -665,7 +674,7 @@ void enemy_movement()
     if (enemy.collision)
     {
       move_enemy_y(-enemy.eject_y);
-      enemy.y_pos.set_f(12);
+      enemy.y_pos.set_f(192);
       enemy.y_vel = 0;
     }
 
@@ -737,7 +746,7 @@ void block_movement(Block* block){
       if (collision)
       {
         move_player_y(-eject_y);
-        y_pos.set_f(12);
+        y_pos.set_f(192);
         y_vel = 4.25_8_8;
 
         if (!squished)
@@ -756,7 +765,7 @@ void block_movement(Block* block){
       if (enemy.collision)
       {
         move_enemy_y(-enemy.eject_y);
-        enemy.y_pos.set_f(12);
+        enemy.y_pos.set_f(192);
         enemy.y_vel = 4.25_8_8;
 
         if (!enemy.squished)
