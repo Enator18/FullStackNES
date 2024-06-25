@@ -399,8 +399,7 @@ void run_game(){
       oam_clear();
 
       oam_spr(x_pos.as_i(), y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > y_pos.as_i()) << 4), 0x01, player_dir);
-      if(!enemy.squished)
-      oam_spr(enemy.x_pos.as_i(), enemy.y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > enemy.y_pos.as_i()) << 4), 0x01, enemy.dir|2);
+      if(!enemy.squished) oam_spr(enemy.x_pos.as_i(), enemy.y_pos.as_i() - 1 - (y_scroll&255) - (((y_scroll&255) > enemy.y_pos.as_i()) << 4), 0x01, enemy.dir|2);
       for(uint8_t i = 0; i < 16; i++){ //Magic Number 16: length of blocks
         if(blocks[i].shouldExist){
           oam_meta_spr(blocks[i].xpos, blocks[i].ypos - 1 - (y_scroll&255) - (((y_scroll&255) > blocks[i].ypos) << 4), block_sprite);
@@ -421,8 +420,8 @@ void run_game(){
 }
 int main(void)
 {
-  static const uint8_t palette[4]={ 0x0f, 0x07, 0x37, 0x17 };
-  static const uint8_t palette_sp[8] = { 0x0f, 0x30, 0x0f, 0x00, 0x0f, 0x07, 0x37, 0x17 };
+  static const uint8_t palette[16]={ 0x0f, 0x07, 0x37, 0x17 };
+  static const uint8_t palette_sp[16] = { 0x0f, 0x30, 0x0f, 0x00, 0x0f, 0x07, 0x37, 0x17, 0x0f, 0x21, 0x0f, 0x11 };
 
   //Draw Background and set PPU Settings
   ppu_off();
