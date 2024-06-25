@@ -338,7 +338,7 @@ void run_game(){
       frames_since_last_spawn++;
       
       if(frames_since_last_spawn>=24){
-        if((enemy.squished)&(rand8()>200)){
+        if((enemy.squished)&(rand8()%5==0)){
           spawnEnemy();
         }else{
         spawnBlock();
@@ -670,32 +670,37 @@ void enemy_movement()
     }
 
       // 3. KILL
-      uint8_t enemy_top = enemy.y_pos.as_i();
-      uint8_t enemy_left = enemy.x_pos.as_i();
-      uint8_t enemy_bottom = enemy_top + 16;
-      uint8_t enemy_right = enemy_left + 8;
-      uint8_t player_left = x_pos.as_i();
-      uint8_t player_top = y_pos.as_i();
-      uint8_t player_right = player_left + 8;
-      uint8_t player_bottom = player_top + 16;
-      if(enemy_top >= player_top & enemy_top <= player_bottom){
-        // our top line is between the player's top and bottom lines
-        if(enemy_left > player_left & enemy_left < player_right){
-          // our left line is between the player's left and right lines
-          player_dead = true;
-        }else if(enemy_right < player_right & enemy_right > player_left){
-          // our right line is between the player's left and right lines
-          player_dead = true;
-        }
-      }else if(enemy_bottom >= player_top & enemy_bottom <= player_bottom){
-        // our bottom line is between the player's top and bottom lines
-        if(enemy_left > player_left & enemy_left < player_right){
-          // our left line is between the player's left and right lines
-          player_dead = true;
-        }else if(enemy_right < player_right & enemy_right > player_left){
-          // our right line is between the player's left and right lines
-          player_dead = true;
-        }
+      // uint8_t enemy_top = enemy.y_pos.as_i();
+      // uint8_t enemy_left = enemy.x_pos.as_i();
+      // uint8_t enemy_bottom = enemy_top + 16;
+      // uint8_t enemy_right = enemy_left + 8;
+      // uint8_t player_left = x_pos.as_i();
+      // uint8_t player_top = y_pos.as_i();
+      // uint8_t player_right = player_left + 8;
+      // uint8_t player_bottom = player_top + 16;
+      // if(enemy_top >= player_top & enemy_top <= player_bottom){
+      //   // our top line is between the player's top and bottom lines
+      //   if(enemy_left > player_left & enemy_left < player_right){
+      //     // our left line is between the player's left and right lines
+      //     player_dead = true;
+      //   }else if(enemy_right < player_right & enemy_right > player_left){
+      //     // our right line is between the player's left and right lines
+      //     player_dead = true;
+      //   }
+      // }else if(enemy_bottom >= player_top & enemy_bottom <= player_bottom){
+      //   // our bottom line is between the player's top and bottom lines
+      //   if(enemy_left > player_left & enemy_left < player_right){
+      //     // our left line is between the player's left and right lines
+      //     player_dead = true;
+      //   }else if(enemy_right < player_right & enemy_right > player_left){
+      //     // our right line is between the player's left and right lines
+      //     player_dead = true;
+      //   }
+      // }
+      int8_t xdiff = (x_pos.as_i()-enemy.x_pos.as_i());
+      int8_t ydiff = (y_pos.as_i()-enemy.y_pos.as_i());
+      if((xdiff<6&&xdiff>-6) & (ydiff<=16&&ydiff>=-16)){
+        player_dead = true;
       }
     }
 }
