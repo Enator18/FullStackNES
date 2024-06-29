@@ -653,19 +653,9 @@ void enemy_movement()
 
             break;
           }
-          block_collision_enemy(&blocks[i]);
-          if (enemy.collision)
-          {
-            move_enemy_y(-enemy.eject_y);
-            enemy.x_pos.set_f(192);
-            enemy.x_vel = 0;
-
-            break;
-          }
         }
       }
-
-
+    }
 
 
     move_enemy_y(enemy.y_vel);
@@ -711,7 +701,6 @@ void enemy_movement()
       if((xdiff<6&&xdiff>-6) && (ydiff<=16&&ydiff>=-16)){
         player_dead = true;
       }
-    }
 }
 
 void block_movement(Block* block){
