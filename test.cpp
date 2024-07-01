@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <ines.h>
 #include <fixed_point.h>
+#include <famistudio_cc65.h>
 
 using namespace fixedpoint_literals;
 
@@ -146,6 +147,9 @@ constexpr uint8_t blank_row[24] = {
 uint8_t frames_since_last_spawn = 200;
 Block blocks[16];
 
+extern unsigned char music_data_fullstack[];
+extern unsigned char sounds[];
+
 bool columnOk(uint8_t col){
   for(Block b : blocks){
     if(b.shouldExist && b.col==col && b.ypos < 17){
@@ -286,8 +290,10 @@ void run_game(){
 
   while (!player_dead)
   {
-    pad = pad_poll(0);
     ppu_wait_nmi();
+
+    pad = pad_poll(0);
+
     update_pause();
     if(!paused)
     {
@@ -338,7 +344,7 @@ void run_game(){
       frames_since_last_spawn++;
       if(frames_since_last_spawn>=24){
         if((enemy.squished)&&(random()%5==0)){
-          spawnEnemy();
+          //spawnEnemy();
         }else{
         spawnBlock();
         }
@@ -433,10 +439,9 @@ int main(void)
   vram_fill(0,64);
 
   ppu_on_all();
-  // *apu_enable = 1;
-  // *sq1_vol = 0x3f;
-  // *sq1_pitch_low = 0xc9;
-  // *sq1_pitch_high = 0;
+  
+  famistudio_init(FAMISTUDIO_PLATFORM_NTSC, &music_data_fullstack);
+
   while(1){
     run_game();
   }
